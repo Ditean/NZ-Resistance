@@ -11,5 +11,26 @@ a repository, as well as produce a clinical report on drug-susceptibility.
 
 Information on getting started
 
+### Prerequisites
+
+Software needed to run
+
+### Installing
+
+instructions for setting up the pipeline
+
+```
+resistance.sh --cleanrun
+```
+## Development
+
+## Built with
+
 ## Authors
-* **Jordan Taylor** - *Bioinformatician* - [University of Otago](https://micro.otago.ac.nz/our-people/other-research-staff/tom-devine-2/) 
+* **Jordan Taylor** - *Bioinformatician* - [University of Otago](https://micro.otago.ac.nz/our-people/other-research-staff/tom-devine-2/)
+
+## Acknowledgements
+
+* Person 1
+* Person 2
+* Reason 1
