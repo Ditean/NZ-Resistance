@@ -8,7 +8,7 @@ This pipeline will perform variant calling on raw sequences, and identify drug-c
 ## Getting started
 The resistance pipeline is designed to be flexible for a range of situations. Primarily, the pipeline has been designed so that clinicians will have a user-friendly experience.
 
-***Running sequences***\
+###***Running sequences***\
 There are two methods for the pipeline to detect resistance mutations
 
 **Providing sequencing files**\
