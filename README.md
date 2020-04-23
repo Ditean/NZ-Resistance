@@ -1,4 +1,4 @@
-# NZ-Resistance
+# Drug Resistance Profiler
 New Zealand Tuberculosis Drug Resistance Pipeline
 
 This pipeline is intended to be used within New Zealand for clinical purposes.
