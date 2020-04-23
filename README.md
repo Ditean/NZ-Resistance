@@ -12,4 +12,4 @@ a repository, as well as produce a clinical report on drug-susceptibility.
 Information on getting started
 
 ## Authors
-* **Jordan Taylor** - *NZ-Resistance* - [Microbiology and Immunology](b51b544d35e130abcc463a48c8a0007db6cc095b) 
+* **Jordan Taylor** - *Bioinformatician* - [University of Otago](b51b544d35e130abcc463a48c8a0007db6cc095b) 
