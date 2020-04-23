@@ -12,4 +12,4 @@ a repository, as well as produce a clinical report on drug-susceptibility.
 Information on getting started
 
 ## Authors
-* **Jordan Taylor** - *Bioinformatician* - [University of Otago](micro.otago.ac.nz/our-people/other-research-staff/tom-devine-2/) 
+* **Jordan Taylor** - *Bioinformatician* - [University of Otago](https://micro.otago.ac.nz/our-people/other-research-staff/tom-devine-2/) 
