@@ -2,6 +2,25 @@
 
 # Script for creating all necessary directories
 
+# Functions ====================================================================
+
+# datasets ---------------------------------------------------------------------
+# The dataset function will download the NCBI command-line program and download
+# the required genome
+function datasets(){
+  curl -o datasets 'https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets'
+
+  chmod +x datasets
+  ./datasets download assembly GCF_000195955.2
+  unzip ncbi_dataset.zip
+  mv ncbi_dataset/data/GCF_*/GCF_*_genomic.fna .core/NC_000962.3.fna
+
+  rm -r ncbi_data*
+  rm -r datasets
+}
+
+
+# ====================
 echo -e "SETTING UP WORKFLOW \nSET-UP COMMENCED: $(adddate)\n"
 
 # Create a log of the set-up
@@ -17,11 +36,11 @@ Date: $(adddate)
 
 DIRECTORIES:
 .core				CHECK
-.reference			CHECK
 .scr				CHECK
-reads				CHECK
 input       CHECK
 output      CHECK
+reference   CHECK
+reads				CHECK
 
 STATUS: PENDING
 
@@ -32,16 +51,17 @@ FILES:
 
 STATUS: PENDING
 
-.reference-
+.scr-
+    |-script_1 			CHECK
+
+STATUS: PENDING
+
+reference-
 	  			|- bovis.fa		CHECK
 	  			|- adaptor.fa		CHECK
 
 STATUS: PENDING
 
-.scr-
-    |-script_1 			CHECK
-
-STATUS: PENDING
 
 =========================================
 END OF SET-UP FILE
@@ -51,7 +71,7 @@ EOF
 echo -e "====================\nCreating directories\n====================\n"
 
 
-# CREATE CORE DIR
+# CREATE CORE DIR - consider making this manditory, therefore if it isn't there ask them to repair the git clone
 if [ ! -d $ROOT/.core ]
 then
 	echo -e "STEP 1: Core DIR created"
@@ -63,14 +83,14 @@ else
 fi
 
 # CREATE REFERENCE DIR
-if [ ! -d $ROOT/.reference ]
+if [ ! -d $ROOT/reference ]
 then
 	echo -e "STEP 2: Reference DIR created"
-        mkdir $ROOT/.reference
-        awk 'NR==1,/.reference/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+        mkdir $ROOT/reference
+        awk 'NR==1,/reference/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
         echo "STEP 2: Reference DIR already present"
-        awk 'NR==1,/.reference/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+        awk 'NR==1,/reference/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
 # CREATE SCR DIR
@@ -85,10 +105,10 @@ else
 fi
 
 # CREATE READS DIR
-if [ ! -d $ROOT/reads ]
+if [ ! -d $ROOT/input ]
 then
         echo -e "STEP 4: Reads DIR created\n"
-        mkdir $ROOT/reads
+        mkdir $ROOT/input
         awk 'NR==1,/reads/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
         echo -e "STEP 4: Reads DIR already present\n"
@@ -105,17 +125,17 @@ fi
 ## HCS TRANSFER
 echo -e "====================\nTransfering files from HCS\n====================\n"
 # H37Rv reference genome
-if [ ! -f $ROOT/.core/NC_002945.4.fa ]
+if [ ! -f $ROOT/references/NC_000962.3.fa ]
 then
-	cp /home/jordan/mount-hcs/storage.hcs-p01.otago.ac.nz/micro-shared$/Htin\ Lab/jordan/reference/genome/AF2122_97/GCF_000195835.2_ASM19583v2_genomic.fna $ROOT/.core/NC_002945.4.fa
-	echo "STEP 5: Bovis genome downloaded"
-	awk 'NR==1,/NC_002945.4.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+  echo "STEP 5: Downloading H37Rv genome"
+	datasets
+	awk 'NR==1,/NC_000962.3.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
-	echo "Step 5: Bovis genome already present"
+	echo "Step 5: H37Rv genome detected"
 	awk 'NR==1,/NC_002945.4.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
-# Contam file
+# Contam file - Need to think about a way to download this file from a repository
 if [ ! -f $ROOT/.core/contam.fa ]
 then
         cp /home/jordan/mount-hcs/storage.hcs-p01.otago.ac.nz/micro-shared$/Htin\ Lab/jordan/reference/container/contam.fa $ROOT/.core/
@@ -153,18 +173,3 @@ else
 fi
 
 echo -e "====================\nSet-up is now complete\n$(adddate)\n====================\n"
-
-
-
-
-# Download new reference genome from NCBI -- make this a function?
-
-curl -o datasets 'https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/LATEST/linux-amd64/datasets'
-
-chmod +x datasets
-mv datasets .scr/datasets
-./scr/datasets download assembly GCF_000195955.2
-unzip ncbi_dataset.zip
-mv ncbi_dataset/data/GCF_*/GCF_*_genomic.fna .core/NC_000962.3.fna
-
-rm -r ncbi_data*
