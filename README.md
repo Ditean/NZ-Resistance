@@ -11,14 +11,16 @@ The resistance pipeline is designed to be flexible for a range of situations. Pr
 ### ***Running sequences***
 There are two methods for the pipeline to detect resistance mutations
 
+**Placing sequences within the input directory**\
+If no sequences are provided, the pipeline will search the input directory for sequences.
+```
+resistance.sh
+```
 **Providing sequencing files**\
 The user can specify forward and reverse reads for processing
 ```
 resistance.sh --forward /sequences/sample_1_R1.fastq.gz --reverse /sequences/sample_1_R1.fastq.gz
 ```
-
-**Placing sequences within the input directory**\
-If no sequences are provided, the pipeline will search the input directory for sequences.
 
 ### Prerequisites
 
