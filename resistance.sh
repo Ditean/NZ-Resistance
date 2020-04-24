@@ -6,7 +6,7 @@
 
 ## THINGS TO DO:
 # - re-setup script to run samples in an array. Each script runs once per pair
-
+# [[ -z "$var" ]] && echo "Empty" || echo "Not empty" <- check if a variable is empty
 
 
 # current date
@@ -17,13 +17,10 @@ function adddate(){
 # Command line parsed arguments ================================================
 
 # PART 1 -----------------------------------------------------------------------
-# Default values for getops values
+# Default values for getops values - what we can do is use a 'is it empty loop'
 
 HELP=NO
 SETUP=NO
-FORWARD=`find $ROOT/input/ -name "*.fastq.gz" | grep {R,r}1`
-REVERSE=${FORWARD//{R,r}1/R2}
-GENOME=$ROOT/referece/H37Rv.fa
 
 # PART 2 -----------------------------------------------------------------------
 # User input for files
@@ -35,7 +32,6 @@ do
 	case $key in
 		-h|--help)
 		HELP=YES
-		shift
 		shift
 		;;
 
@@ -63,10 +59,16 @@ do
 		;;
 
 		ADAPTOR
+
 		*)
-		POSITIONAL+=("1") # Store unknown options ----------------------------------
-		shift
+		>&2 printf "Error: Invalid argument\n"
+		exit 1
 		;;
+
+		#*)
+		#POSITIONAL+=("$1") # Store unknown options ----------------------------------
+		#shift
+		#;;
 	esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters ----------------------
@@ -77,7 +79,7 @@ then
 	exit 0
 fi
 
-if [[ $SETUP == YES ]]
+if [[ ( $SETUP == YES ) ( -d / / / ) ]]
 then
 	echo "Beginning setup......."
 	bash ./scr/1.1.setup.sh
