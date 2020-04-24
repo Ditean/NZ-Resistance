@@ -1,4 +1,7 @@
-#!/bin/bash
+# PROJECT PROGRESS
+# ================
+#   - think about if you need .core files in report (maybe only reference)
+
 
 # Script for creating all necessary directories
 
@@ -19,6 +22,11 @@ function datasets(){
   rm -r datasets
 }
 
+# Download container file and place within the .core directory + copy version into reference folder
+function container(){
+  curl someaddress
+  mv contam.fa $ROOT/.core/contam.fa && cp $ROOT/.core/contam.fa $ROOT/reference/adaptor.fa
+}
 
 # ====================
 echo -e "SETTING UP WORKFLOW \nSET-UP COMMENCED: $(adddate)\n"
@@ -58,7 +66,8 @@ STATUS: PENDING
 
 reference-
 	  			|- bovis.fa		CHECK
-	  			|- adaptor.fa		CHECK
+	  			|- adaptor.fa	CHECK
+          |- genome.bed CHECK # still need to chek whether or not we have this
 
 STATUS: PENDING
 
@@ -104,15 +113,15 @@ else
         awk 'NR==1,/.scr/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
-# CREATE READS DIR
+# CREATE input DIR
 if [ ! -d $ROOT/input ]
 then
-        echo -e "STEP 4: Reads DIR created\n"
+        echo -e "STEP 4: Input DIR created\n"
         mkdir $ROOT/input
-        awk 'NR==1,/reads/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+        awk 'NR==1,/input/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
-        echo -e "STEP 4: Reads DIR already present\n"
-        awk 'NR==1,/reads/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+        echo -e "STEP 4: Input DIR already present\n"
+        awk 'NR==1,/input/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
 # CHECK ALL DIRECTORIES ARE READY
@@ -127,9 +136,15 @@ echo -e "====================\nTransfering files from HCS\n====================\
 # H37Rv reference genome
 if [ ! -f $ROOT/references/NC_000962.3.fa ]
 then
-  echo "STEP 5: Downloading H37Rv genome"
-	datasets
-	awk 'NR==1,/NC_000962.3.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+  echo "STEP 5: Preparing H37Rv genome"
+  if [ -f $ROOT/.core/NC_000962.3.fna ]
+  then
+    cp $ROOT/.core/NC_000962.3.fna $ROOT/reference/H37Rv.fa
+    awk 'NR==1,/NC_000962.3.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+  else
+    datasets
+    awk 'NR==1,/NC_000962.3.fa/{sub(/CHECK/,"DOWNLOADED")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+  fi
 else
 	echo "Step 5: H37Rv genome detected"
 	awk 'NR==1,/NC_002945.4.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt

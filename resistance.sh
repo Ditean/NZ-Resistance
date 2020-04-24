@@ -4,6 +4,11 @@
 
 # Jordan Taylor - 23/04/2020
 
+## THINGS TO DO:
+# - re-setup script to run samples in an array. Each script runs once per pair
+
+
+
 # current date
 function adddate(){
 	date "+%d-%m-%Y %H:%M:%S %Z"
@@ -11,6 +16,17 @@ function adddate(){
 
 # Command line parsed arguments ================================================
 
+# PART 1 -----------------------------------------------------------------------
+# Default values for getops values
+
+HELP=NO
+SETUP=NO
+FORWARD=`find $ROOT/input/ -name "*.fastq.gz" | grep {R,r}1`
+REVERSE=${FORWARD//{R,r}1/R2}
+GENOME=$ROOT/referece/H37Rv.fa
+
+# PART 2 -----------------------------------------------------------------------
+# User input for files
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -46,6 +62,7 @@ do
 		shift
 		;;
 
+		ADAPTOR
 		*)
 		POSITIONAL+=("1") # Store unknown options ----------------------------------
 		shift
@@ -79,6 +96,23 @@ ROOT=$(dirname $(realpath $0))
 if && [ ! -d $ROOT/input ]
 	bash ./.scr/1.1.setup.sh
 fi
-# Run itial setup of directories and scripts
+# 1.1.setup --------------------------------------------------------------------
+# run setup of all directories and reference genomes
 
 bash ./.scr/1.1.setup.sh
+
+# 1.2.trimming.sh
+# NEED TO FIGURE OUT A WAY TO MATCH FILES
+if [ ! -f $FORWARD ] && [ ! -f ${FORWARD//{R,r}1/R2} ]
+then
+	echo "Can not detect paired files"
+	exit 0
+fi
+
+if [ ! -f $REVERSE ] && [ ! -f ${REVERSE//{R,r}1/R2} ]
+then
+	echo "Can not detect paired files"
+	exit 0
+fi
+
+bash ./.scr/1.2.trimming.sh -r1 $FORWARD -r2 $REVERSE -a $ADAPTOR
