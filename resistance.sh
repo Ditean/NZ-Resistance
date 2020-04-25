@@ -8,20 +8,16 @@
 # - re-setup script to run samples in an array. Each script runs once per pair
 # [[ -z "$var" ]] && echo "Empty" || echo "Not empty" <- check if a variable is empty
 
+# Part 0: Initial set-up========================================================
 
-# current date
+# Part 0.1 - FUNCTIONS----------------------------------------------------------
+
+# Part 0.1.1 - date function
 function adddate(){
 	date "+%d-%m-%Y %H:%M:%S %Z"
 }
 
-# Command line parsed arguments ================================================
-
-# PART 1 -----------------------------------------------------------------------
-# Default values for getops values - what we can do is use a 'is it empty loop'
-
-
-# PART 2 -----------------------------------------------------------------------
-# User input for files
+# Part 0.2 - Getops user input--------------------------------------------------
 POSITIONAL=()
 while [[ $# -gt 0 ]] # input is greater than 0
 do
@@ -56,7 +52,33 @@ do
 		shift
 		;;
 
-		ADAPTOR
+		-a|--adaptor)
+		ADAPTOR="$2"
+		shift
+		shift
+		;;
+
+		-t|--threads)
+		THREADS="$2"
+		shift
+		shift
+		;;
+
+		-q|--quality)
+		QUALITY="$2"
+		shift
+		shift
+		;;
+
+		--hoard)
+		HOARD=YES
+		shift
+		;;
+
+		# Consider adding a setting for --FORCE
+		#			force the samples despite wrong names of files?
+
+		# Consider a Snakemake options?
 
 		*)
 		>&2 printf "Error: Invalid argument\n"
@@ -64,23 +86,25 @@ do
 		;;
 
 		#*)
-		#POSITIONAL+=("$1") # Store unknown options ----------------------------------
+		#POSITIONAL+=("$1") # Store unknown options --------------------------------
 		#shift
 		#;;
 	esac
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters ----------------------
 
-# Part 1: Establish variables
 
-# Part 1.1 - help message
+# Part 0.2.1 - help message-----------------------------------------------------
 if [[ $HELP == YES ]]
 then
-	echo -e "Help statement for the program\n- add options here\n- add other details\nverison 0.0.0 EARLY ALPHA \vCreated by: Jordan Taylor"
+	echo -e "TB Resistance Profiler"
+	echo -e "======================\n"
+	echo -e "Usage: resistance.sh [ -r1 forward ] [ -r2 reverse ] [ -g genome ] [ -a adaptor ] [ -q quality ]\n"
+	echo -e "  -r1"
 	exit 0
 fi
 
-# Part 1.2 - check correct user input
+# Part 0.2.2 - check correct user input-----------------------------------------
 
 if [[ ( -z "$FORWARD" ) && ( -n "$REVERSE" ) ]] || [[ ( -n "$FORWARD" ) && ( -z "$REVERSE" ) ]]
 then
@@ -88,18 +112,26 @@ then
 	exit 1
 fi
 
+# Part 0.3 - ENVIRONMENTAL VARIABLES--------------------------------------------
 
-# Part 2: Exporting variables
+# Part 0.3.1 - Root DIR---------------------------------------------------------
+ROOT=$(dirname $(realpath $0))
 
-# If R1 and R2
+# Part 0.4: Exporting variables=================================================
+
+# Part 0.4.1 - Export DIR path--------------------------------------------------
+export ROOT=$ROOT
+
+# Part 0.4.2 - Export user provided R1 and R2-----------------------------------
 if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] # -n = TRUE if string is nonzero || -z = TRUE if string is zero
-then
+then # Add a check here for matching names
 	export FORWARD=$FORWARD && export REVERSE=$REVERSE
 fi
 
-
-
 echo -e "RESISTANCE pipeline\nINITILISING PROGRAM\n"
+
+
+# 1.1.setup.sh - Run setup sub-script===========================================
 
 if [[ ( $SETUP == YES ) || ( ! -d $ROOT/refernce ) ]]
 then
@@ -109,42 +141,36 @@ then
 	exit 0
 fi
 
-
-## Defining Environmental Paths
-
-# ROOT - sets path to current directory
-ROOT=$(dirname $(realpath $0))
-
-# Run initial check for directories
-# If variable = null and input is not present - run set-up script and exit
-if && [ ! -d $ROOT/input ]
-	bash ./.scr/1.1.setup.sh
-fi
-# 1.1.setup --------------------------------------------------------------------
-# run setup of all directories and reference genomes
-
-bash ./.scr/1.1.setup.sh
-
-# 1.2.trimming.sh
+# 1.2.trimming.sh - Fastq-mcf trim of R1 and R2=================================
 # NEED TO FIGURE OUT A WAY TO MATCH FILES ------ MAKE THE SUB-SCRIPT PERFORM THE CHECK?
 
-if [[ ]]
+#if [[ ( -n $FORWARD)]][[ ( ! -f $FORWARD ) && ( ! -f ${FORWARD//{R,r}1/R2} ) ]
+#then
+#	echo "Can not detect paired files"
+#	exit 0
+#fi
 
-if [[ ( ! -f $FORWARD ) && ( ! -f ${FORWARD//{R,r}1/R2} ) ]
-then
-	echo "Can not detect paired files"
-	exit 0
-fi
-
-if [ ! -f $REVERSE ] && [ ! -f ${REVERSE//{R,r}1/R2} ]
-then
-	echo "Can not detect paired files"
-	exit 0
-fi
+#if [ ! -f $REVERSE ] && [ ! -f ${REVERSE//{R,r}1/R2} ]
+#then
+#	echo "Can not detect paired files"
+#	exit 0
+#fi
 
 # establish an array
+declare -A sample_array # Add this later
 
-declare -A sample_array
+# Some command to see if to use input or variable
+declare -a sample_array
+sample_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
+
+# Now have the array - now check if a file does not exit
+
+for i in ${sample_array[@]}
+do
+	[[ ( -f $ROOT/${i}.R1.fastq.gz ) && ( -f $ROOT/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have matching pair"; sample_array[$sample_array[(i)$i]]=() # Remove the index for sample in array
+done
+
+## NEED TO EXPORT THE ARRAYS
 
 #i=1
 
@@ -156,18 +182,27 @@ declare -A sample_array
 # fi
 #fi
 
-if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] # double check the names match first
-then
-	R1=$FORWARD
-	R2=${FORWARD%%R1*}R2${FORWARD#*R1}
-	[[ $R1 == ]]
-else
-	j=1
-	for i in `find $ROOT/input/ -name "*.fastq.gz" | grep R1`
-	do # REWORK ARRAY: ONLY NEED TO HAVE THE BASENAME - GET RID OF BOTH R1 and R2
-		[[ -f ${i//R1/R2}]] && sample_array=([sample_${j}_R1]=$i [sample_${j}_R2]=${i//R1/R2}); j++  || echo -e "ERROR: R2 file not found: ${i//R1/R2}"
-	done
-fi
+#if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] # double check the names match first
+#then
+#	R1=$FORWARD
+#	R2=${FORWARD%%R1*}R2${FORWARD#*R1}
+#	[[ $R2 == $REVERSE ]] || exit 1
+#else
+#	j=1
+#	for i in `find $ROOT/input/ -name "*.fastq.gz" | grep R1`
+#	do # REWORK ARRAY: ONLY NEED TO HAVE THE BASENAME - GET RID OF BOTH R1 and R2
+#		[[ -f ${i//R1/R2}]] && sample_array=([sample_${j}_R1]=$i [sample_${j}_R2]=${i//R1/R2}); j++  || echo -e "ERROR: R2 file not found: ${i//R1/R2}"
+#	done
+#fi
+#
+bash ./.scr/1.2.trimming.sh # Variables should be exported - so no need to provide flags
 
+# DO A QC HERE?
 
-bash ./.scr/1.2.trimming.sh -r1 $FORWARD -r2 $REVERSE -a $ADAPTOR
+# 2.1.bwa.sh - Align all reads to reference genome =============================
+
+bash ./.scr/2.1.bwa.sh
+
+# 2.2.samtools.sh - Convert to BAM and remove low quality alignments
+
+# 3.1.freebayes.sh - Perform variant calling on alignments
