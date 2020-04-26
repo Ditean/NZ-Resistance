@@ -17,6 +17,10 @@ function adddate(){
 	date "+%d-%m-%Y %H:%M:%S %Z"
 }
 
+function date_temp(){
+	date "+%d-%m-%Y"
+}
+
 # Part 0.2 - Getops user input--------------------------------------------------
 POSITIONAL=()
 while [[ $# -gt 0 ]] # input is greater than 0
@@ -125,13 +129,15 @@ export ROOT=$ROOT
 # Part 0.4.2 - Export user provided R1 and R2-----------------------------------
 if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] # -n = TRUE if string is nonzero || -z = TRUE if string is zero
 then # Add a check here for matching names
-	export FORWARD=$FORWARD && export REVERSE=$REVERSE
+	FASTA= TRUE # if TRUE, script will use these files in future
+	temp_forward=$(basename $FORWARD R1.fastq.gz)
+	SAMPLE_ID=${temp_forward::-1} # Sample basename
 fi
 
 echo -e "RESISTANCE pipeline\nINITILISING PROGRAM\n"
 
 
-# 1.1.setup.sh - Run setup sub-script===========================================
+# 1.1.setup.sh - Run setup sub-script=========================================== ## NEED TO SHIFT THIS EARLIER
 
 if [[ ( $SETUP == YES ) || ( ! -d $ROOT/refernce ) ]]
 then
@@ -157,22 +163,25 @@ fi
 #fi
 
 # establish an array
-declare -A sample_array # Add this later
+#declare -A sample_array # Add this later
 
-# Some command to see if to use input or variable
-declare -a sample_array
-sample_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
+# Create an array for INPUT directory / user FASTQ
+if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] # -n = TRUE if string is nonzero || -z = TRUE if string is zero
+then # Add a check here for matching names
+	FASTA= TRUE # if TRUE, script will use these files in future
+	temp_forward=$(basename $FORWARD R1.fastq.gz)
+	SAMPLE_ID=${temp_forward::-1} # Sample basename
+fi
 
-# Now have the array - now check if a file does not exit
+if [[ ! $FASTA == TRUE ]]
+	declare -a sample_array
+	sample_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
+	for i in ${sample_array[@]}
+	do
+		[[ ( -f $ROOT/${i}.R1.fastq.gz ) && ( -f $ROOT/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have matching pair"; sample_array[$sample_array[(i)$i]]=() # Remove the index for sample in array
+	done
 
-for i in ${sample_array[@]}
-do
-	[[ ( -f $ROOT/${i}.R1.fastq.gz ) && ( -f $ROOT/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have matching pair"; sample_array[$sample_array[(i)$i]]=() # Remove the index for sample in array
-done
-
-## NEED TO EXPORT THE ARRAYS
-
-#i=1
+fi
 
 #if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]]
 #then
@@ -195,13 +204,34 @@ done
 #	done
 #fi
 #
-bash ./.scr/1.2.trimming.sh # Variables should be exported - so no need to provide flags
 
+# Run in array?
+
+run_stamp=date_temp
+mkdir -p tmp/$run_stamp
+
+export STAMP=$ROOT/tmp/$run_stamp
+
+if [[ $FASTA == TRUE ]]
+then
+	export FORWARD=$FORWARD && export REVERSE=$REVERSE
+	export SAMPLE=$SAMPLE_ID
+	bash ./.scr/1.2.trimming.sh
+else
+	for i in ${sample_array[@]}
+		do
+			export sample=$i
+			bash ./.scr/1.2.trimming.sh # Variables should be exported - so no need to provide flags
+		done
+fi
 # DO A QC HERE?
 
 # 2.1.bwa.sh - Align all reads to reference genome =============================
-
-bash ./.scr/2.1.bwa.sh
+for i in ${sample_array[@]}
+do
+	export sample=$i
+	bash ./.scr/2.1.bwa.sh # In code set limit for
+done
 
 # 2.2.samtools.sh - Convert to BAM and remove low quality alignments
 

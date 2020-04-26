@@ -7,6 +7,15 @@
 #
 # - Could also make a quick check for count of R1 == R2
 
+# FUNCTIONS
+function adddate(){
+	date "+%d-%m-%Y %H:%M:%S %Z"
+}
+
+function date_temp(){
+	date "+%d-%m-%Y"
+}
+
 POSITIONAL=()
 while [[ $# -gt 0 ]]
 do
@@ -78,12 +87,18 @@ fi
 
 # 1.2.3 Running Fastq-MCF ======================================================
 
-# need to make sure default values exist
+mkdir -p $STAMP/fastq-mcf
 
-fastq-mcf $ADAPTOR $FORWARD $REFERSE -q $QUALITY -o $ROOT/tmp/${sample}.trimmed.fastq.gz -o $ROOT/tmp/${sample}.trimmed.fastq.gz
-
-# 1.2.4 Run Fastqc =============================================================
-
-fastqc - - - -
+# Initial trimming
+if [[ $FASTA == TRUE ]]
+do
+	fastq-mcf $ADAPTOR $FORWARD $REVERSE -q $QUALITY \
+	-o $STAMP/fastq-mcf/${sample}.R1.fastq.gz \
+	-o $STAMP/fastq-mcf/${sample}.R2.fastq.gz
+else
+	fastq-mcf $ADAPTOR $ROOT/${i}*.fastq.gz -q $QUALITY \
+	-o $STAMP/fastq-mcf/${i}.R1.fastq.gz \
+	-o $STAMP/fastq-mcf/${i}.R2.fastq.gz
+fi
 
 exit 0
