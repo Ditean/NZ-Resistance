@@ -1,6 +1,7 @@
 # PROJECT PROGRESS
 # ================
 #   - think about if you need .core files in report (maybe only reference)
+#   - consider making user provided references be shifted in this script
 
 
 # Script for creating all necessary directories
