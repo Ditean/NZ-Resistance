@@ -31,6 +31,7 @@ fi
 if [ ! -f $ADAPTOR ]
 then
   echo -e "WARNING: Can not detect the adaptor file!\nINVALID PATH: $ADAPTOR"
+	exit 1
 fi
 
 # 2.1.2 Running Fastq-MCF ======================================================
