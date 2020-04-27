@@ -40,12 +40,12 @@ fi
 if [[ $FASTA == TRUE ]]
 do
 	fastq-mcf $ADAPTOR $FORWARD $REVERSE -q $QUALITY \
-	-o $STAMP/fastq-mcf/${SAMPLE}.R1.fastq.gz \
-	-o $STAMP/fastq-mcf/${SAMPLE}.R2.fastq.gz
+	-o $STAMP/${SAMPLE}${SAMPLE}.R1.fastq.gz \
+	-o $STAMP/${SAMPLE}/${SAMPLE}.R2.fastq.gz
 else
 	fastq-mcf $ADAPTOR $ROOT/${SAMPLE}*.fastq.gz -q $QUALITY \
-	-o $STAMP/fastq-mcf/${SAMPLE}.R1.fastq.gz \
-	-o $STAMP/fastq-mcf/${SAMPLE}.R2.fastq.gz
+	-o $STAMP/${SAMPLE}/${SAMPLE}.R1.fastq.gz \
+	-o $STAMP/${SAMPLE}/${SAMPLE}.R2.fastq.gz
 fi
 
 exit 0

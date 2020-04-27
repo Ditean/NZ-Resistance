@@ -1,7 +1,7 @@
 # Samtools script
 
-samtools view -bq 10 -@ ${THREADS} $STAMP/alignment/${SAMPLE}.sam > $STAMP/alignment/${SAMPLE}.bam
+samtools view -bq 10 -@ ${THREADS} $STAMP/${SAMPLE}/${SAMPLE}.sam > $STAMP/${SAMPLE}/${SAMPLE}.bam
 
-samtools sort $STAMP/alignment/${SAMPLE}.bam -n -O sam | samtools fixmate -m -O bam - $STAMP/alignment/${SAMPLE}.fixmate.bam
+samtools sort $STAMP/${SAMPLE}/${SAMPLE}.bam -n -O sam | samtools fixmate -m -O bam - $STAMP/${SAMPLE}/${SAMPLE}.fixmate.bam
 
-samtools sort $STAMP/alignment/${SAMPLE}.fixmate.bam | samtools markdup -r -S - $STAMP/alignment/${SAMPLE}.fixmate.markdup.bam
+samtools sort $STAMP/${SAMPLE}/${SAMPLE}.fixmate.bam | samtools markdup -r -S - $STAMP/${SAMPLE}/${SAMPLE}.fixmate.markdup.bam

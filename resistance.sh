@@ -7,8 +7,14 @@
 ## NOTES:
 # - re-setup script to run samples in an array. Each script runs once per pair
 # [[ -z "$var" ]] && echo "Empty" || echo "Not empty" <- check if a variable is empty
+# ADD A FUNCTION FOR MASKING REFERENCE GENOME
+#		- User can either provide a masked genome or provide an unmasked based on options?
+#		- Add a function that will do the masking of the reference genome
+#				> Try to make as much a function as possible
 
 # 0: Initial set-up=============================================================
+
+set -x # If return = non-zero, terminate parent script
 
 # 0.1 - FUNCTIONS---------------------------------------------------------------
 
@@ -162,12 +168,18 @@ else
 		base_forward=$(basename $FORWARD) # Take only the base name for comparison
 		base_reverse=$(basename $REVERSE) # If files are in separate directories, non-base will not match
 
-		# If the names match, export the forward and reverse
+		# If the names match, export the forward and reverse #### CONSIDER MAKING BOTH IN SAME ARRAY - therefore one script in future
 		if [[ $base_forward == ${base_reverse//R1/R2/} ]] ## IF 3
 		then
 			FASTA=TRUE # If TRUE, use user provided sequences
-			base_forward=$(basename $FORWARD R1.fastq.gz) # Removes either _/. from before R1
+			base_forward=$(basename $FORWARD R1.fastq.gz) # Removes either '_' / '.' from before R1
 			sample_ID=${base_forward::-1} # Basename for both R1 and R2 files
+
+			# base_forward=$(basename $FORWARD)
+			# temp=${base_forward%R1*}
+			# base_forward=${temp::-1}
+			# temp=${base_forward%L001*}
+			# base_forward=${temp::-1}
 
 			# Export variables
 			export FASTA=$FASTA
@@ -230,12 +242,12 @@ fi
 
 if [[ $FASTA == TRUE ]]
 then
-	bash ./.scr/1.2.trimming.sh
+	bash ./.scr/2.1.trimming.sh
 else
 	for i in ${sample_array[@]}
 		do
 			export SAMPLE=$i
-			bash ./.scr/1.2.trimming.sh # Variables should be exported - so no need to provide flags
+			bash ./.scr/2.1.trimming.sh # Variables should be exported - so no need to provide flags
 		done
 fi
 # DO A QC HERE?
@@ -244,16 +256,22 @@ fi
 for i in ${sample_array[@]}
 do
 	export sample=$i
-	bash ./.scr/2.1.bwa.sh # In code set limit for
+	bash ./.scr/3.1.bwa.sh # In code set limit for
 done
 
 # 2.2.samtools.sh - Convert to BAM and remove low quality alignments
+bash ./.scr/3.2.samtools.sh
 
-# 3.1.freebayes.sh - Perform variant calling on alignments
+# 4.1.freebayes.sh - Perform variant calling on alignments
 
+bash ./.scr/4.1.freebayes.sh
 
+# Shift the initial VCF results
 
-
+for i in ${sample_array[@]}
+do
+	cp $STAMP/${i}/${i}.vcf $ROOT/output/${i}.vcf
+done
 
 #### JUNK SCRIPT PILE ##########################################################
 # Old code that was wrong / obsolete
