@@ -25,6 +25,12 @@ resistance.sh --forward /sequences/sample_1_R1.fastq.gz --reverse /sequences/sam
 ### Prerequisites
 
 Software needed to run
+* **Python 3.7.1**
+* **Fastq-mcf** *v1.04.807*
+* **BWA** *v0.7.17-r1188*
+* **Samtools** *v1.9* (htslib 1.9)
+* **Bcftools** *v1.9* (htslib 1.9)
+* **Freebayes** *v1.3.1-dirty*
 
 ### Installing
 
