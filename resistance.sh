@@ -47,6 +47,26 @@ function container(){
   mv contam.fa $ROOT/.core/contam.fa && cp $ROOT/.core/contam.fa $ROOT/reference/adaptor.fa
 }
 
+function metadata(){
+	while true
+	do
+		echo "Please provide report metadata"
+		read -p "BARCODE: " barcode
+		read -p "Sequencing Date: " seq_date
+		read -p " " something
+
+		echo "Provided details"
+		echo "Barcode: $barcode"
+		echo "Sequencing Date: $seq_date"
+
+		read -p "Continue (Y/N)" answer
+		if [[ $answer == "Y" ]]
+		then
+			break
+		fi
+	done
+}
+
 
 # 0.2 - Command line user input ------------------------------------------------
 POSITIONAL=()
@@ -83,10 +103,16 @@ do
 		shift
 		;;
 
-		-a|--adaptor)
+		-a|--adaptor) # Adaptors for removal in trimming - must be FASTA format ----
 		ADAPTOR="$2"
 		shift
 		shift
+		;;
+
+		--meta) # User provided metadata for report --------------------------------
+		META="$2"
+		shift
+		shift`
 		;;
 
 		-t|--threads)
@@ -95,14 +121,25 @@ do
 		shift
 		;;
 
-		-q|--quality)
+		-q|--quality) # Phred Score used in trimming -------------------------------
 		QUALITY="$2"
 		shift
 		shift
 		;;
 
-		--hoard)
+		--hoard) # Do not delete any intermediary after running --------------------
 		HOARD=YES
+		shift
+		;;
+
+		--mask) # If yes, mask reference genome (only call resistance SNPs) --------
+		MASK=YES
+		shift
+		;;
+
+		--bed) # User provided BED for masking -------------------------------------
+		BED="$2"  # CONSIDER HAVING THIS SET AS A DEFINED VALUE?
+		shift
 		shift
 		;;
 
@@ -159,7 +196,7 @@ fi
 
 if [[ ( -z "$FORWARD" ) && ( -n "$REVERSE" ) ]] || [[ ( -n "$FORWARD" ) && ( -z "$REVERSE" ) ]] ## IF1
 then
-	echo -e "ERROR: Provide both a forward and reverse sequence when providing a path"
+	echo -e "ERROR: Provide both a forward and reverse sequence"
 	exit 1
 else
 
@@ -204,16 +241,44 @@ fi ## FI1
 run_stamp=date_temp
 mkdir -p tmp/$run_stamp
 
-export STAMP=$run_stamp
+export STAMP=${ROOT}/tmp/$run_stamp
 
-# 1.2.3 - Reference genome
+# 1.2.3 - Reference genome -- need to check if masking is required
 
-if [[ -z $GENOME ]]
+#if [[ -z $GENOME ]]
+#then
+#	GENOME=$ROOT/reference/H37Rv.fa && export GENOME=$GENOME
+#else
+#	export GENOME=$GENOME
+#fi
+
+# CAPTURE USER INPUT
+
+if [[ ! -n $META ]]
+#### RUN IT AS A FUNCTION
 then
-	GENOME=$ROOT/reference/H37Rv.fa && export GENOME=$GENOME
+	echo "Please provide metadata for report"
+	read -p "BARCODE"
+
+
+# MASK CHECK
+
+if [[ -n $MASK ]]
+then
+	if [[ -z $GENOME ]]
+	then
+		maskfasta -fi $ROOT/reference/H37Rv.fa -bed $BED -fo $ROOT/reference/masked_H37Rv.fa && GENOME=$ROOT/reference/masked_H37Rv.fa
+	else
+		maskfasta -fi $GENOME -bed $BED -f $ROOT/reference/masked_user_genome.fa && GENOME=$ROOT/reference/masked_user_genome.fa
+	fi
 else
-	export GENOME=$GENOME
+	if [[ -z $GENOME ]]
+	then
+		GENOME=$ROOT/reference/H37Rv.fa
+	fi
 fi
+
+export GENOME=$GENOME
 
 # 1.2.4 - Adaptor reference
 
@@ -230,11 +295,11 @@ echo -e "RESISTANCE pipeline\nINITILISING PROGRAM\n"
 
 # 2.0.1 - Create an Array of sample names from input DIR if FASTA=FALSE
 if [[ ! $FASTA == TRUE ]]
-	declare -a sample_array
-	sample_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
-	for i in ${sample_array[@]}
+	declare -a input_array
+	input_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
+	for i in ${input_array[@]}
 	do
-		[[ ( -f $ROOT/${i}.R1.fastq.gz ) && ( -f $ROOT/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have matching pair"; sample_array[$sample_array[(i)$i]]=() # Remove the index for sample in array
+		[[ ( -f $ROOT/${i}.R1.fastq.gz ) && ( -f $ROOT/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have matching pair"; input_array[$input_array[(i)$i]]=() # Remove the index for sample in array
 	done
 fi
 
@@ -242,29 +307,39 @@ fi
 
 if [[ $FASTA == TRUE ]]
 then
+	mkdir ${ROOT}/${STAMP}/$sample_ID
 	bash ./.scr/2.1.trimming.sh
 else
-	for i in ${sample_array[@]}
+	for i in ${input_array[@]}
 		do
 			export SAMPLE=$i
+			mkdir ${ROOT}/tmp/${STAMP}/$i
 			bash ./.scr/2.1.trimming.sh # Variables should be exported - so no need to provide flags
 		done
 fi
 # DO A QC HERE?
 
 # 2.1.bwa.sh - Align all reads to reference genome =============================
+
+declare -a sample_array
+sample_array=($(find $ROOT/tmp/$STAMP/ -name "*.fastq.gz" - printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
 for i in ${sample_array[@]}
 do
-	export sample=$i
+	export SAMPLE=$i
 	bash ./.scr/3.1.bwa.sh # In code set limit for
 done
 
 # 2.2.samtools.sh - Convert to BAM and remove low quality alignments
-bash ./.scr/3.2.samtools.sh
+for i in ${sample_array[@]}
+do
+	bash ./.scr/3.2.samtools.sh
+done
 
 # 4.1.freebayes.sh - Perform variant calling on alignments
-
-bash ./.scr/4.1.freebayes.sh
+for i in ${sample_array[@]}
+do
+	bash ./.scr/4.1.freebayes.sh
+done
 
 # Shift the initial VCF results
 
@@ -272,6 +347,25 @@ for i in ${sample_array[@]}
 do
 	cp $STAMP/${i}/${i}.vcf $ROOT/output/${i}.vcf
 done
+
+
+echo "The Pipeline has now finished"
+# Call resistance mutations
+
+
+
+
+# Summary information for Report
+
+# NEED:
+# 		- file name
+#			- pipeline version
+#			- run date
+#			- whether it is masked
+#			- user provided files
+
+
+
 
 #### JUNK SCRIPT PILE ##########################################################
 # Old code that was wrong / obsolete

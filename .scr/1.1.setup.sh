@@ -29,6 +29,10 @@ function container(){
   mv contam.fa $ROOT/.core/contam.fa && cp $ROOT/.core/contam.fa $ROOT/reference/adaptor.fa
 }
 
+function adddate(){
+	date "+%d-%m-%Y %H:%M:%S %Z"
+}
+
 # ====================
 echo -e "SETTING UP WORKFLOW \nSET-UP COMMENCED: $(adddate)\n"
 
@@ -49,26 +53,30 @@ DIRECTORIES:
 input       CHECK
 output      CHECK
 reference   CHECK
-reads				CHECK
 
 STATUS: PENDING
 
 FILES:
 .core-
-     |- NC_002945.4.fa		CHECK
+     |- NC_000962.3.fna		CHECK
      |- contam.fa		CHECK
+     |- mask_genome.bed   CHECK
 
 STATUS: PENDING
 
 .scr-
-    |-script_1 			CHECK
+    |-1.1.setup.sh		  CHECK
+    |-2.1.trimming.sh   CHECK
+    |-3.1.bwa.sh        CHECK
+    |-3.2.samtools.sh   CHECK
+    |-4.1.freebayes.sh  CHECK
 
 STATUS: PENDING
 
 reference-
-	  			|- bovis.fa		CHECK
+	  			|- H37Rv.fa		CHECK
 	  			|- adaptor.fa	CHECK
-          |- genome.bed CHECK # still need to chek whether or not we have this
+          |- genome.bed CHECK
 
 STATUS: PENDING
 
@@ -92,48 +100,68 @@ else
 	awk 'NR==1,/.core/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
-# CREATE REFERENCE DIR
-if [ ! -d $ROOT/reference ]
-then
-	echo -e "STEP 2: Reference DIR created"
-        mkdir $ROOT/reference
-        awk 'NR==1,/reference/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
-else
-        echo "STEP 2: Reference DIR already present"
-        awk 'NR==1,/reference/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
-fi
-
 # CREATE SCR DIR
 if [ ! -d $ROOT/.scr ]
 then
-	echo -e "STEP 3: SCR DIR created"
+	echo -e "STEP 2: SCR DIR created"
         mkdir $ROOT/.scr
         awk 'NR==1,/.scr/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
-        echo "STEP 3: SCR DIR already present"
+        echo "STEP 2: SCR DIR already present"
         awk 'NR==1,/.scr/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
 # CREATE input DIR
 if [ ! -d $ROOT/input ]
 then
-        echo -e "STEP 4: Input DIR created\n"
+        echo -e "STEP 3: Input DIR created\n"
         mkdir $ROOT/input
         awk 'NR==1,/input/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
-        echo -e "STEP 4: Input DIR already present\n"
+        echo -e "STEP 3: Input DIR already present\n"
         awk 'NR==1,/input/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+fi
+
+# CREATE output DIR
+if [ ! -d $ROOT/output ]
+then
+        echo -e "STEP 4: OUTPUT DIR created\n"
+        mkdir $ROOT/output
+        awk 'NR==1,/output/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+else
+        echo -e "STEP 4: OUTPUT DIR already present\n"
+        awk 'NR==1,/output/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+fi
+
+
+# CREATE REFERENCE DIR
+if [ ! -d $ROOT/reference ]
+then
+	echo -e "STEP 5: Reference DIR created"
+        mkdir $ROOT/reference
+        awk 'NR==1,/reference/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+else
+        echo "STEP 5: Reference DIR already present"
+        awk 'NR==1,/reference/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
 # CHECK ALL DIRECTORIES ARE READY
 
-
-
+setup_array=(.core .scr input output reference)
+for i in ${setup_array[@]}
+do
+  if [[ ! -d ${ROOT}/${i} ]]
+  then
+    echo -e "ERROR: Final check of directories failed\nPlease re-run setup again"
+    awk 'NR==1,/STATUS:/{sub(/PENDING/,"FAILED")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+    exit 1
+  fi
+done
+awk 'NR==1,/STATUS:/{sub(/PENDING/,"PASSED")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 # Move in the core files (references from HCS)
 # The USER must have access to both HCS and have access to the Jordan directory in Htin Lab
 
-## HCS TRANSFER
-echo -e "====================\nTransfering files from HCS\n====================\n"
+echo -e "====================\nEstablishing required files\n====================\n"
 # H37Rv reference genome
 if [ ! -f $ROOT/references/NC_000962.3.fa ]
 then
@@ -151,41 +179,90 @@ else
 	awk 'NR==1,/NC_002945.4.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
-# Contam file - Need to think about a way to download this file from a repository
-if [ ! -f $ROOT/.core/contam.fa ]
+# Reference genome
+if [ ! -f $ROOT/.core/NC_000962.3.fa ]
 then
-        cp /home/jordan/mount-hcs/storage.hcs-p01.otago.ac.nz/micro-shared$/Htin\ Lab/jordan/reference/container/contam.fa $ROOT/.core/
-        echo -e "STEP 6: Adaptor contam downloaded\n"
-        awk 'NR==1,/contam.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+  echo "Downloading reference genome"
+  dataset
+  awk 'NR==1,/NC_000962.3.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
-        echo -e "Step 6: Adaptor contam already present\n"
-        awk 'NR==1,/contam.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+  awk 'NR==1,/NC_000962.3.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
-## REFERENCE DIR SET-UP
+# Contams
+if [ ! -f $ROOT/.core/contam.fa ]
+then
+  echo "Can not detect contam file - please download"
+  awk 'NR==1,/contam.fa/{sub(/CHECK/,"ERROR")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+else
+echo "Contam file present"
+  awk 'NR==1,/contam.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+fi
+
+# Mask
+if [ ! -f $ROOT/.core/mask_genome.bed ]
+then
+  echo "ERROR: Can not detect mask_genome.bed"
+  awk 'NR==1,/mask_genome.bed/{sub(/CHECK/,"ERROR")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+else
+  echo "Masking file detected"
+  awk 'NR==1,/mask_genome.bed/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+fi
+
+#### ADD IN A STATUS PENDING CHECK
 
 echo -e "====================\nSetting up reference files\n====================\n"
 
 # Bovis reference genome
-if [ ! -f $ROOT/.reference/bovis.fa ]
+if [ ! -f $ROOT/reference/H37Rv.fa ]
 then
-	cp $ROOT/.core/NC_002945.4.fa $ROOT/.reference/bovis.fa
-	echo "Step 7: Bovis reference setup"
-	awk 'NR==1,/bovis.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+	cp $ROOT/.core/NC_000962.3.fna $ROOT/reference/H37Rv.fa
+	echo "Step 7: H37Rv reference setup"
+	awk 'NR==1,/H37Rv.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
-	echo "Step 7: Bovis reference already present"
-	awk 'NR==1,/bovis.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+	echo "Step 7: H37Rv reference already present"
+	awk 'NR==1,/H37Rv.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
 # Sequencing adaptor reference
-if [ ! -f $ROOT/.reference/adaptor.fa ]
+if [ ! -f $ROOT/reference/adaptor.fa ]
 then
-	cp $ROOT/.core/contam.fa $ROOT/.reference/adaptor.fa
+	cp $ROOT/.core/contam.fa $ROOT/reference/adaptor.fa
 	echo -e "Step 8: Adaptor reference setup\n"
 	awk 'NR==1,/adaptor.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
 	echo -e "Step 8: Adaptor reference already present\n"
 	awk 'NR==1,/adaptor.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
+
+# Genome bed
+if [ ! -f $ROOT/reference/genome.bed ]
+then
+  if [ -f $ROOT/.core/mask_genome.bed ]
+  then
+    cp $ROOT/.core/mask_genome.bed $ROOT/reference/genome.bed
+    echo "Masking BED file set up"
+    awk 'NR==1,/genome.bed/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+  fi
+else
+  echo "Masking BED file already present"
+  awk 'NR==1,/genome.bed/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+
+
+
+
+# Contam file - Need to think about a way to download this file from a repository
+#if [ ! -f $ROOT/.core/contam.fa ]
+#then
+#        cp /home/jordan/mount-hcs/storage.hcs-p01.otago.ac.nz/micro-shared$/Htin\ Lab/jordan/reference/container/contam.fa $ROOT/.core/
+#        echo -e "STEP 6: Adaptor contam downloaded\n"
+#        awk 'NR==1,/contam.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+#else
+#        echo -e "Step 6: Adaptor contam already present\n"
+#        awk 'NR==1,/contam.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+#fi
+
+## REFERENCE DIR SET-UP
+
 
 echo -e "====================\nSet-up is now complete\n$(adddate)\n====================\n"
