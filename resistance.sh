@@ -174,6 +174,9 @@ fi
 ROOT=$(dirname $(realpath $0))
 export ROOT=$ROOT
 
+BED=$ROOT/reference/genome.bed
+export BED=$BED
+
 ### CONSIDER ADDING ALL PATH VARIABLES HERE?
 
 
@@ -254,11 +257,11 @@ export STAMP=${ROOT}/tmp/$run_stamp
 
 # CAPTURE USER INPUT
 
-if [[ ! -n $META ]]
+#if [[ ! -n $META ]]
 #### RUN IT AS A FUNCTION
-then
-	echo "Please provide metadata for report"
-	read -p "BARCODE"
+#then
+#	echo "Please provide metadata for report"
+#	read -p "BARCODE"
 
 
 # MASK CHECK
