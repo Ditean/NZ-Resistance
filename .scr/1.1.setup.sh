@@ -213,7 +213,7 @@ fi
 
 echo -e "====================\nSetting up reference files\n====================\n"
 
-# Bovis reference genome
+# H37Rv reference genome
 if [ ! -f $ROOT/reference/H37Rv.fa ]
 then
 	cp $ROOT/.core/NC_000962.3.fna $ROOT/reference/H37Rv.fa
@@ -247,7 +247,7 @@ then
 else
   echo "Masking BED file already present"
   awk 'NR==1,/genome.bed/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
-
+fi
 
 
 

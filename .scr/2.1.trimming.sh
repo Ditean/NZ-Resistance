@@ -43,7 +43,8 @@ do
 	-o $STAMP/${SAMPLE}/${SAMPLE}.R1.fastq.gz \
 	-o $STAMP/${SAMPLE}/${SAMPLE}.R2.fastq.gz
 else
-	fastq-mcf $ADAPTOR $ROOT/${SAMPLE}*.fastq.gz -q $QUALITY \
+	fastq-mcf $ADAPTOR $ROOT/input/${SAMPLE}*R1*fastq.gz $ROOT/input/${SAMPLE}*R1*fastq.gz \
+	 -q $QUALITY \
 	-o $STAMP/${SAMPLE}/${SAMPLE}.R1.fastq.gz \
 	-o $STAMP/${SAMPLE}/${SAMPLE}.R2.fastq.gz
 fi

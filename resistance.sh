@@ -112,7 +112,7 @@ do
 		--meta) # User provided metadata for report --------------------------------
 		META="$2"
 		shift
-		shift`
+		shift
 		;;
 
 		-t|--threads)
@@ -157,6 +157,12 @@ do
 done
 set -- "${POSITIONAL[@]}" # restore positional parameters ----------------------
 
+# TEMP
+QUALITY=30
+THREADS=8
+
+export QUALITY=$QUALITY
+export THREADS=$THREADS
 
 # 1.0: Set-up and checking user input===========================================
 
@@ -182,7 +188,7 @@ export BED=$BED
 
 # 1.1.setup.sh - Run setup sub-script-------------------------------------------
 
-if [[ ( $SETUP == YES ) || ( ! -d $ROOT/refernce ) ]]
+if [[ ( $SETUP == YES ) || ( ! -d $ROOT/reference ) ]] # If [[ ( -n $SETUP )]]
 then
 	echo "STEP 0: SETUP"
 	bash ./scr/1.1.setup.sh
@@ -201,19 +207,21 @@ if [[ ( -z "$FORWARD" ) && ( -n "$REVERSE" ) ]] || [[ ( -n "$FORWARD" ) && ( -z 
 then
 	echo -e "ERROR: Provide both a forward and reverse sequence"
 	exit 1
-else
+fi
 
-	if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] && [[ ( -f $"FORWARD" ) && ( -f "$REVERSE" ) ]] # Check files actually exist ## IF2
-	then
-		base_forward=$(basename $FORWARD) # Take only the base name for comparison
-		base_reverse=$(basename $REVERSE) # If files are in separate directories, non-base will not match
+if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] && [[ ( -f "$FORWARD" ) && ( -f "$REVERSE" ) ]] # Check files actually exist ## IF2
+then
+	base_forward=$(basename $FORWARD) # Take only the base name for comparison
+	base_reverse=$(basename $REVERSE) # If files are in separate directories, non-base will not match
 
 		# If the names match, export the forward and reverse #### CONSIDER MAKING BOTH IN SAME ARRAY - therefore one script in future
-		if [[ $base_forward == ${base_reverse//R1/R2/} ]] ## IF 3
-		then
-			FASTA=TRUE # If TRUE, use user provided sequences
-			base_forward=$(basename $FORWARD R1.fastq.gz) # Removes either '_' / '.' from before R1
-			sample_ID=${base_forward::-1} # Basename for both R1 and R2 files
+# ========================================
+	if [[ $base_forward == ${base_reverse//R1/R2/} ]] ## IF 3
+	then
+		FASTA=TRUE # If TRUE, use user provided sequences
+#		base_forward=$(basename $FORWARD R1.fastq.gz) # Removes either '_' / '.' from before R1
+#		sample_ID=${base_forward::-1} # Basename for both R1 and R2 files
+		sample_ID=$(echo $base_forward | sed 's/.R1.*fastq.gz//')
 
 			# base_forward=$(basename $FORWARD)
 			# temp=${base_forward%R1*}
@@ -222,29 +230,32 @@ else
 			# base_forward=${temp::-1}
 
 			# Export variables
-			export FASTA=$FASTA
-			export FORWARD=$FORWARD
-			export REVERSE=$REVERSE
-			export SAMPLE=$sample_ID
-
-		else
-			echo -e "ERROR: $base_forward and $base_reverse do not match"
-			exit 1
-		fi ## FI 3
+		export FASTA=$FASTA
+		export FORWARD=$FORWARD
+		export REVERSE=$REVERSE
+		export SAMPLE=$sample_ID
 
 	else
-		echo -e "ERROR: Can not detect forward and reverse sequences"
+		echo -e "ERROR: $base_forward and $base_reverse do not match"
 		exit 1
+	fi ## FI 3
+# ==========================================
+elif [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] && [[ ( ! -f "$FORWARD" ) || ( ! -f "$REVERSE" ) ]]
+then
+	echo -e "ERROR: Can not detect forward and reverse sequences"
+	exit 1
+fi
+#		if [[ ( ! -f "$FORWARD" ) || ( ! -f "$REVERSE" ) ]]; then
+#			echo -e "ERROR: Can not detect forward and reverse sequences"
+#			exit 1
+#fi ## FI1
 
-	fi ## FI 2
-
-fi ## FI1
-
+	#statements
 # 1.2.2 - Directory for processing sequences
-run_stamp=date_temp
-mkdir -p tmp/$run_stamp
+run_stamp=$(date_temp)
+mkdir -p $ROOT/tmp/$run_stamp
 
-export STAMP=${ROOT}/tmp/$run_stamp
+export STAMP=${ROOT}/tmp/${run_stamp}
 
 # 1.2.3 - Reference genome -- need to check if masking is required
 
@@ -274,11 +285,9 @@ then
 	else
 		maskfasta -fi $GENOME -bed $BED -f $ROOT/reference/masked_user_genome.fa && GENOME=$ROOT/reference/masked_user_genome.fa
 	fi
-else
-	if [[ -z $GENOME ]]
+elif [[ ( -z $MASK ) && ( -z $GENOME ) ]]
 	then
 		GENOME=$ROOT/reference/H37Rv.fa
-	fi
 fi
 
 export GENOME=$GENOME
@@ -297,26 +306,68 @@ fi
 echo -e "RESISTANCE pipeline\nINITILISING PROGRAM\n"
 
 # 2.0.1 - Create an Array of sample names from input DIR if FASTA=FALSE
+#if [[ ! $FASTA == TRUE ]]
+#then
+#	declare -a input_array
+#	input_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
+#	for i in ${input_array[@]}
+#	do
+#		[[ ( -f $ROOT/input/${i}.R1.fastq.gz ) && ( -f $ROOT/input/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have matching pair"; input_array[$input_array[(i)$i]]=() # Remove the index for sample in array
+#		[[ ( -f $ROOT/${i}.R1.fastq.gz ) && ( -f $ROOT/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have a matching pair"; mismatch_array+=($i)
+#	done
+#fi
+#
+#if [[ ! $FASTA == TRUE ]]
+#then
+#	declare -a mismatch_array
+#	declare -a sample_array
+#	if [[ ( -f $ROOT/input/${i}*R1*fastq.gz ) && ( -f $ROOT/input/${i}*R2*fastq.gz ) ]]
+#	then
+#		sample_array+=($i)
+#	else
+#		mismatch_array+=($i)
+#	fi
+#fi
+
 if [[ ! $FASTA == TRUE ]]
-	declare -a input_array
-	input_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
+then
+
+	declare -a sample_array
+	declare -a mismatch_array
+
+	input_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | grep "R1"))
+
 	for i in ${input_array[@]}
 	do
-		[[ ( -f $ROOT/${i}.R1.fastq.gz ) && ( -f $ROOT/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have matching pair"; input_array[$input_array[(i)$i]]=() # Remove the index for sample in array
+		if [[ ( -f $ROOT/input/${i} ) && ( -f $ROOT/input/${i//R1/R2} ) ]]
+		then
+			sample_array+=($(echo $i | sed 's/.R1.*fastq.gz//'))
+		else
+			mismatch_array+=($(echo ${i//R1/R2}))
+			echo "ERROR: Can not detect ${i//R1/R2}"
+		fi
 	done
 fi
 
 # 2.1.trimming.sh - run fastq-mcf trimming
+# Requires the following variables
+#	- FASTA
+#			> R1 and R2
+#			> Basename of file
+#	- SAMPLE
+# - Adaptor
+# - Quality
+# -
 
 if [[ $FASTA == TRUE ]]
 then
-	mkdir ${ROOT}/${STAMP}/$sample_ID
+	mkdir ${STAMP}/$sample_ID
 	bash ./.scr/2.1.trimming.sh
 else
-	for i in ${input_array[@]}
+	for i in ${sample_array[@]}
 		do
 			export SAMPLE=$i
-			mkdir ${ROOT}/tmp/${STAMP}/$i
+			mkdir ${STAMP}/$i
 			bash ./.scr/2.1.trimming.sh # Variables should be exported - so no need to provide flags
 		done
 fi
@@ -324,8 +375,10 @@ fi
 
 # 2.1.bwa.sh - Align all reads to reference genome =============================
 
-declare -a sample_array
-sample_array=($(find $ROOT/tmp/$STAMP/ -name "*.fastq.gz" - printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
+
+
+#declare -a sample_array
+#sample_array=($(find $ROOT/tmp/$STAMP/ -name "*.fastq.gz" - printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
 for i in ${sample_array[@]}
 do
 	export SAMPLE=$i
