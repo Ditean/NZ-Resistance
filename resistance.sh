@@ -4,17 +4,20 @@
 
 # Jordan Taylor - 23/04/2020
 
-## NOTES:
-# - re-setup script to run samples in an array. Each script runs once per pair
-# [[ -z "$var" ]] && echo "Empty" || echo "Not empty" <- check if a variable is empty
-# ADD A FUNCTION FOR MASKING REFERENCE GENOME
-#		- User can either provide a masked genome or provide an unmasked based on options?
-#		- Add a function that will do the masking of the reference genome
-#				> Try to make as much a function as possible
+#################################################
+#	Remaining Jobs:
+#		- Clean up getopts
+#				> Hoard mode & Metadata?
+#		- Establish resistance calling script
+#		- Solution to downloading container and BED file
+#		- Metadata for report
+#################################################
+
+# Settings
+#set -x # Debug mode
+
 
 # 0: Initial set-up=============================================================
-
-set -x # If return = non-zero, terminate parent script
 
 # 0.1 - FUNCTIONS---------------------------------------------------------------
 
@@ -66,7 +69,6 @@ function metadata(){
 		fi
 	done
 }
-
 
 # 0.2 - Command line user input ------------------------------------------------
 POSITIONAL=()
@@ -219,15 +221,7 @@ then
 	if [[ $base_forward == ${base_reverse//R1/R2/} ]] ## IF 3
 	then
 		FASTA=TRUE # If TRUE, use user provided sequences
-#		base_forward=$(basename $FORWARD R1.fastq.gz) # Removes either '_' / '.' from before R1
-#		sample_ID=${base_forward::-1} # Basename for both R1 and R2 files
 		sample_ID=$(echo $base_forward | sed 's/.R1.*fastq.gz//')
-
-			# base_forward=$(basename $FORWARD)
-			# temp=${base_forward%R1*}
-			# base_forward=${temp::-1}
-			# temp=${base_forward%L001*}
-			# base_forward=${temp::-1}
 
 			# Export variables
 		export FASTA=$FASTA
@@ -245,10 +239,6 @@ then
 	echo -e "ERROR: Can not detect forward and reverse sequences"
 	exit 1
 fi
-#		if [[ ( ! -f "$FORWARD" ) || ( ! -f "$REVERSE" ) ]]; then
-#			echo -e "ERROR: Can not detect forward and reverse sequences"
-#			exit 1
-#fi ## FI1
 
 	#statements
 # 1.2.2 - Directory for processing sequences
@@ -258,22 +248,6 @@ mkdir -p $ROOT/tmp/$run_stamp
 export STAMP=${ROOT}/tmp/${run_stamp}
 
 # 1.2.3 - Reference genome -- need to check if masking is required
-
-#if [[ -z $GENOME ]]
-#then
-#	GENOME=$ROOT/reference/H37Rv.fa && export GENOME=$GENOME
-#else
-#	export GENOME=$GENOME
-#fi
-
-# CAPTURE USER INPUT
-
-#if [[ ! -n $META ]]
-#### RUN IT AS A FUNCTION
-#then
-#	echo "Please provide metadata for report"
-#	read -p "BARCODE"
-
 
 # MASK CHECK
 
@@ -306,28 +280,6 @@ fi
 echo -e "RESISTANCE pipeline\nINITILISING PROGRAM\n"
 
 # 2.0.1 - Create an Array of sample names from input DIR if FASTA=FALSE
-#if [[ ! $FASTA == TRUE ]]
-#then
-#	declare -a input_array
-#	input_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
-#	for i in ${input_array[@]}
-#	do
-#		[[ ( -f $ROOT/input/${i}.R1.fastq.gz ) && ( -f $ROOT/input/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have matching pair"; input_array[$input_array[(i)$i]]=() # Remove the index for sample in array
-#		[[ ( -f $ROOT/${i}.R1.fastq.gz ) && ( -f $ROOT/${i}.R2.fastq.gz ) ]] || echo -e "$i does not have a matching pair"; mismatch_array+=($i)
-#	done
-#fi
-#
-#if [[ ! $FASTA == TRUE ]]
-#then
-#	declare -a mismatch_array
-#	declare -a sample_array
-#	if [[ ( -f $ROOT/input/${i}*R1*fastq.gz ) && ( -f $ROOT/input/${i}*R2*fastq.gz ) ]]
-#	then
-#		sample_array+=($i)
-#	else
-#		mismatch_array+=($i)
-#	fi
-#fi
 
 if [[ ! $FASTA == TRUE ]]
 then
@@ -374,11 +326,6 @@ fi
 # DO A QC HERE?
 
 # 2.1.bwa.sh - Align all reads to reference genome =============================
-
-
-
-#declare -a sample_array
-#sample_array=($(find $ROOT/tmp/$STAMP/ -name "*.fastq.gz" - printf "%f\n" | sed -i 's/*.R..fastq.gz//g' | uniq ))
 for i in ${sample_array[@]}
 do
 	export SAMPLE=$i
@@ -406,70 +353,5 @@ done
 
 
 echo "The Pipeline has now finished"
+
 # Call resistance mutations
-
-
-
-
-# Summary information for Report
-
-# NEED:
-# 		- file name
-#			- pipeline version
-#			- run date
-#			- whether it is masked
-#			- user provided files
-
-
-
-
-#### JUNK SCRIPT PILE ##########################################################
-# Old code that was wrong / obsolete
-#
-
-# Getops
-#*)
-#POSITIONAL+=("$1") # Store unknown options --------------------------------
-#shift
-#;;
-
-# 1.2.trimming.sh - Fastq-mcf trim of R1 and R2=================================
-# NEED TO FIGURE OUT A WAY TO MATCH FILES ------ MAKE THE SUB-SCRIPT PERFORM THE CHECK?
-
-#if [[ ( -n $FORWARD)]][[ ( ! -f $FORWARD ) && ( ! -f ${FORWARD//{R,r}1/R2} ) ]
-#then
-#	echo "Can not detect paired files"
-#	exit 0
-#fi
-
-#if [ ! -f $REVERSE ] && [ ! -f ${REVERSE//{R,r}1/R2} ]
-#then
-#	echo "Can not detect paired files"
-#	exit 0
-#fi
-
-# establish an array
-#declare -A sample_array # Add this later
-
-#then
-#	sample_array=([sample_${i}_R1]=$FORWARD [sample_${i}_R2]=$REVERSE)
-#else
-#	for
-# fi
-#fi
-
-#if [[ ( -n "$FORWARD" ) && ( -n "$REVERSE" ) ]] # double check the names match first
-#then
-#	R1=$FORWARD
-#	R2=${FORWARD%%R1*}R2${FORWARD#*R1}
-#	[[ $R2 == $REVERSE ]] || exit 1
-#else
-#	j=1
-#	for i in `find $ROOT/input/ -name "*.fastq.gz" | grep R1`
-#	do # REWORK ARRAY: ONLY NEED TO HAVE THE BASENAME - GET RID OF BOTH R1 and R2
-#		[[ -f ${i//R1/R2}]] && sample_array=([sample_${j}_R1]=$i [sample_${j}_R2]=${i//R1/R2}); j++  || echo -e "ERROR: R2 file not found: ${i//R1/R2}"
-#	done
-#fi
-#
-
-# Run in array?
