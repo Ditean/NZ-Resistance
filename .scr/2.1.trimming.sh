@@ -38,7 +38,7 @@ fi
 
 # 2.1.2.1 - Initial trimming
 if [[ $FASTA == TRUE ]]
-do
+then
 	fastq-mcf $ADAPTOR $FORWARD $REVERSE -q $QUALITY \
 	-o $STAMP/${SAMPLE}/${SAMPLE}.R1.fastq.gz \
 	-o $STAMP/${SAMPLE}/${SAMPLE}.R2.fastq.gz

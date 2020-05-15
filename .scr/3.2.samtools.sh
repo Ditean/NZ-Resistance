@@ -5,7 +5,7 @@
 # NEED TO ADD LIMIT TO THREADS HERE?
 if [[ $THREADS -ge 7 ]]
 then
-  $THREADS=7 # (MAX SETTING)
+  THREADS=7 # (MAX SETTING)
   echo -e "WARNING: SAMtools thread adjusted to maximum of 7"
 fi
 

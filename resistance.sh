@@ -193,7 +193,7 @@ export BED=$BED
 if [[ ( $SETUP == YES ) || ( ! -d $ROOT/reference ) ]] # If [[ ( -n $SETUP )]]
 then
 	echo "STEP 0: SETUP"
-	bash ./scr/1.1.setup.sh
+	bash ./.scr/1.1.setup.sh
 	echo -e "SETUP 0: COMPLETE - please check the log files for summary of setup\n======================================================\nPlease re-run the resistance pipeline"
 	exit 0
 fi
@@ -335,12 +335,14 @@ done
 # 2.2.samtools.sh - Convert to BAM and remove low quality alignments
 for i in ${sample_array[@]}
 do
+	export SAMPLE=$i
 	bash ./.scr/3.2.samtools.sh
 done
 
 # 4.1.freebayes.sh - Perform variant calling on alignments
 for i in ${sample_array[@]}
 do
+	export SAMPLE=$i
 	bash ./.scr/4.1.freebayes.sh
 done
 

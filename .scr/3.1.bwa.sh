@@ -10,7 +10,7 @@
 # 3.1.1 - Set thread level for BWA mem
 if [[ $THREADS -ge 7 ]]
 then
-  $THREADS=7 # (MAX SETTING)
+  THREADS=7 # (MAX SETTING)
   echo -e "WARNING: BWA thread adjusted to maximum of 7"
 fi
 
