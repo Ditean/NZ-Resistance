@@ -186,6 +186,7 @@ then
 else
   echo "STEP X: Dataset DIR already present"
   awk 'NR==1,/reference/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+fi
 
 # CHECK ALL DIRECTORIES ARE READY
 
@@ -222,10 +223,10 @@ else
 fi
 
 # Reference genome
-if [ ! -f $ROOT/.core/NC_000962.3.fa ]
+if [ ! -f $ROOT/.core/NC_000962.3.fna ]
 then
   echo "Downloading reference genome"
-  dataset
+  datasets
   awk 'NR==1,/NC_000962.3.fa/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
   awk 'NR==1,/NC_000962.3.fa/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
@@ -306,6 +307,7 @@ then
 else
   echo "Resistance profile detected"
   awk 'NR==1,/resistance_profile.tsv/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+fi
 
 # Manifest File
 if [ ! -f $ROOT/dataset/manifest.tsv ]

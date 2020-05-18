@@ -6,7 +6,7 @@ first_line=(isoniazid rifampicin ethambutol pyrazinamide)
 second_line=(amikacin capreomycin ethionamide fluoroquinolones kanamycin linezolid para-aminosalicylic streptomycin)
 
 # Assign barcode
-barcode=$(cat $ROOT/dataset/manifest.txt | grep $ID | grep $run_stamp | cut -f 1)
+barcode=$(cat $ROOT/dataset/manifest.tsv | grep $SAMPLE | grep $run_stamp | cut -f 1)
 
 
 for i in ${first_line[@]}
@@ -18,9 +18,9 @@ do
     pmid=$(echo $line | awk 'NF && NF-1 {print ($(NF-1))}')
     # If the mutation is found
     mutation=
-    if grep -q $snp "$ROOT/output/${ID}.vcf" # NEED TO LOOP TO CORRECT FILE
+    if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
     then
-      echo -e "$barcode\tFirst Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}" >> $ROOT/dataset/resistance_profile.tsv
+      echo -e "${barcode}\tFirst Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}" >> $ROOT/dataset/resistance_profile.tsv
       mutation=FOUND
       break
     fi
@@ -29,7 +29,7 @@ do
   # If no mutation is found
   if [[ ! $mutation == "FOUND" ]]
   then
-    echo -e "$barcode\tFirst Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNO\tNO\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
+    echo -e "${barcode}\tFirst Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNO\tNO\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
   fi
 done
 
@@ -42,9 +42,9 @@ do
     pmid=$(echo $line | awk 'NF && NF-1 {print ($(NF-1))}')
     # If the mutation is found
     mutation=
-    if grep -q $snp "$ROOT/output/${i}.vcf" # NEED TO LOOP TO CORRECT FILE
+    if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
     then
-      echo -e "$barcode\tSecond Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}" >> $ROOT/dataset/resistance_profile.tsv
+      echo -e "${barcode}\tSecond Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}" >> $ROOT/dataset/resistance_profile.tsv
       mutation=FOUND
       break
     fi
@@ -53,6 +53,6 @@ do
   # If no mutation is found
   if [[ ! $mutation == "FOUND" ]]
   then
-    echo -e "$barcode\tSecond Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNo\NO\NO\NO" >> $ROOT/dataset/resistance_profile.tsv
+    echo -e "${barcode}\tSecond Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNo\tNO\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
   fi
 done

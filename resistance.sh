@@ -327,7 +327,7 @@ then
 		barcode=$(cat $ROOT/dataset/resistance_profile.tsv | tail -n 1 | cut -f 1)
 		addup=$((barcode++))
 	fi
-	for i in man_array[@]
+	for i in ${man_array[@]}
 	do
 		name=$(echo $i | sed 's/.R1.*fastq.gz//')
 		echo -e "$barcode\t$i\t${i//R1/R2}\t$name\t$(adddate)" >> $ROOT/dataset/manifest.tsv
@@ -389,7 +389,7 @@ done
 
 for i in ${sample_array[@]}
 do
-	export ID=$i
+	export SAMPLE=$i
 	export run_stamp=$run_stamp
 	bash ./.scr/profile.sh
 done
