@@ -52,6 +52,7 @@ DIRECTORIES:
 .scr				CHECK
 input       CHECK
 output      CHECK
+dataset     CHECK
 reference   CHECK
 
 STATUS: PENDING
@@ -61,6 +62,19 @@ FILES:
      |- NC_000962.3.fna		CHECK
      |- contam.fa		CHECK
      |- mask_genome.bed   CHECK
+     |- mutations  CHECK
+               |- rifampicin.txt CHECK
+               |- streptomycin.txt CHECK
+               |- pyrazinamide.txt CHECK
+               |- para-aminosalicylic.txt  CHECK
+               |- linezolid.txt  CHECK
+               |- kanamycin.txt  CHECK
+               |- isoniazid.txt  CHECK
+               |- fluoroquinolones.txt CHECK
+               |- ethionamide.txt  CHECK
+               |- ethambutol.txt CHECK
+               |- capreomycin.txt  CHECK
+               |- amikacin.txt CHECK
 
 STATUS: PENDING
 
@@ -77,9 +91,27 @@ reference-
 	  			|- H37Rv.fa		CHECK
 	  			|- adaptor.fa	CHECK
           |- genome.bed CHECK
+          |- mutations  CHECK
+                    |- rifampicin.txt CHECK
+                    |- streptomycin.txt CHECK
+                    |- pyrazinamide.txt CHECK
+                    |- para-aminosalicylic.txt  CHECK
+                    |- linezolid.txt  CHECK
+                    |- kanamycin.txt  CHECK
+                    |- isoniazid.txt  CHECK
+                    |- fluoroquinolones.txt CHECK
+                    |- ethionamide.txt  CHECK
+                    |- ethambutol.txt CHECK
+                    |- capreomycin.txt  CHECK
+                    |- amikacin.txt CHECK
 
 STATUS: PENDING
 
+dataset-
+        |- manifest.tsv CHECK
+        |- resistance_profile.tsv CHECK
+
+STATUS: PENDING
 
 =========================================
 END OF SET-UP FILE
@@ -145,9 +177,19 @@ else
         awk 'NR==1,/reference/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
+# CREATE DATASET DIR
+if [ ! -d $ROOT/dataset ]
+then
+  echo -e "STEP X: Dataset DIR created"
+  mkdir $ROOT/dataset
+  awk 'NR==1,/dataset/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+else
+  echo "STEP X: Dataset DIR already present"
+  awk 'NR==1,/reference/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+
 # CHECK ALL DIRECTORIES ARE READY
 
-setup_array=(.core .scr input output reference)
+setup_array=(.core .scr input output reference dataset)
 for i in ${setup_array[@]}
 do
   if [[ ! -d ${ROOT}/${i} ]]
@@ -249,7 +291,32 @@ else
   awk 'NR==1,/genome.bed/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
+# mutation files
+if [ ! -d $ROOT/reference/mutations ]
+then
+  cp -R $ROOT/.core/mutations $ROOT/reference/
+fi
 
+# Resistance profile
+if [ ! -f $ROOT/dataset/resistance_profile.tsv ]
+then
+  touch $ROOT/dataset/resistance_profile.tsv
+  echo -e "BARCODE\tCLASS\tDRUG\tSTATUS\tGENE\tPOSITION\tREFERENCE\tALTERNATE\tPMID" > $ROOT/dataset/resistance_profile.tsv # Move to set-up
+  awk 'NR==1,/resistance_profile.tsv/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+else
+  echo "Resistance profile detected"
+  awk 'NR==1,/resistance_profile.tsv/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+
+# Manifest File
+if [ ! -f $ROOT/dataset/manifest.tsv ]
+then
+  touch $ROOT/dataset/manifest.tsv
+  echo -e "BARCODE\tFORWARD SEQ\tREVERSE SEQ\tSAMPLE ID\tPROCESSING DATE" > $ROOT/dataset/manifest.tsv
+  awk 'NR==1,/manifest.tsv/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+else
+  echo "Manifest detected"
+  awk 'NR==1,/manifest.tsv/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
+fi
 
 # Contam file - Need to think about a way to download this file from a repository
 #if [ ! -f $ROOT/.core/contam.fa ]

@@ -286,6 +286,7 @@ then
 
 	declare -a sample_array
 	declare -a mismatch_array
+	declare -a man_array
 
 	input_array=($(find $ROOT/input/ -name "*fastq.gz" -printf "%f\n" | grep "R1"))
 
@@ -294,10 +295,43 @@ then
 		if [[ ( -f $ROOT/input/${i} ) && ( -f $ROOT/input/${i//R1/R2} ) ]]
 		then
 			sample_array+=($(echo $i | sed 's/.R1.*fastq.gz//'))
+			man_array+=($(echo $i))
 		else
 			mismatch_array+=($(echo ${i//R1/R2}))
 			echo "ERROR: Can not detect ${i//R1/R2}"
 		fi
+	done
+fi
+
+# BARCODE
+if [[ $FASTA == TRUE ]]
+then
+	linenumber=$(sed -n '$=' $ROOT/dataset/resistance_profile.tsv)
+	if [ $linenumber == 1 ]
+	then
+		barcode=1000
+	else
+		barcode=$(cat $ROOT/dataset/resistance_profile.tsv | tail -n 1 | cut -f 1)
+		addup=$((barcode++))
+	fi
+
+	echo -e "${barcode}\t${base_forward}\t${base_reverse}\t${sample_ID}\t$(adddate)" >> $ROOT/dataset/manifest.tsv
+
+elif [[ ! $FASTA == TRUE ]]
+then
+	linenumber=$(sed -n '$=' $ROOT/dataset/resistance_profile.tsv)
+	if [ $linenumber == 1 ]
+	then
+		barcode=1000
+	else
+		barcode=$(cat $ROOT/dataset/resistance_profile.tsv | tail -n 1 | cut -f 1)
+		addup=$((barcode++))
+	fi
+	for i in man_array[@]
+	do
+		name=$(echo $i | sed 's/.R1.*fastq.gz//')
+		echo -e "$barcode\t$i\t${i//R1/R2}\t$name\t$(adddate)" >> $ROOT/dataset/manifest.tsv
+		addup=$((barcode++))
 	done
 fi
 
@@ -353,6 +387,12 @@ do
 	cp $STAMP/${i}/${i}.vcf $ROOT/output/${i}.vcf
 done
 
+for i in ${sample_array[@]}
+do
+	export ID=$i
+	export run_stamp=$run_stamp
+	bash ./.scr/profile.sh
+done
 
 echo "The Pipeline has now finished"
 

@@ -1,0 +1,11 @@
+4247429	A	G	embB	Met306Val	ethambutol	(EMB)	21300839	High
+4247429	A	C	embB	Met306Leu	ethambutol	(EMB)	9257740	High
+4247430	T	C	embB	Met306Thr	ethambutol	(EMB)	11854934	High
+4247431	G	A	embB	Met306Ile	ethambutol	(EMB)	21300839	High
+4247431	G	C	embB	Met306Ile	ethambutol	(EMB)	21300839	High
+4247431	G	T	embB	Met306Ile	ethambutol	(EMB)	21300839	High
+4247729	G	A	embB	Gly406Ser	ethambutol	(EMB)	20427375	High
+4247729	G	T	embB	Gly406Cys	ethambutol	(EMB)	24055765	High
+4247730	G	C	embB	Gly406Ala	ethambutol	(EMB)	20427375	High
+4247730	G	A	embB	Gly406Asp	ethambutol	(EMB)	20427375	High
+4248003	A	G	embB	Gln497Arg	ethambutol	(EMB)	20427375	High
