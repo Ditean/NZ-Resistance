@@ -29,7 +29,7 @@ do
   # If no mutation is found
   if [[ ! $mutation == "FOUND" ]]
   then
-    echo -e "${barcode}\tFirst Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNO\tNO\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
+    echo -e "${barcode}\tFirst Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNO\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
   fi
 done
 
@@ -53,6 +53,6 @@ do
   # If no mutation is found
   if [[ ! $mutation == "FOUND" ]]
   then
-    echo -e "${barcode}\tSecond Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNo\tNO\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
+    echo -e "${barcode}\tSecond Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNo\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
   fi
 done
