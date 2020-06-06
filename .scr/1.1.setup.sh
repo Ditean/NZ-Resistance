@@ -333,5 +333,34 @@ fi
 
 ## REFERENCE DIR SET-UP
 
+#### CONDA ENVIRONMENT
+
+#conda env create -f $ROOT/.core/environment.yml
+
+#conda activate resistance
+
+#cd $CONDA_PREFIX
+#mkdir -p ./etc/conda/activate.d
+#touch ./etc/conda/activate.d/env_vars.sh
+#echo '#!/bin/bash' > etc/conda/activate.d/env_vars.sh
+
+#echo "export ROOT=$(dirname $(realpath $0)) >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh"
+#echo "export OUTPUT=$ROOT/output >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh"
+#echo "export REFERENCE=$ROOT/reference >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh"
+
+#mkdir -p ./etc/conda/deactivate.d
+#touch ./etc/conda/deactivate.d/env_vars.sh
+#echo '#!/bin/bash' > etc/conda/deactivate.d/env_vars.sh
+
+#echo "unset ROOT >> $CONDA_PREFIX/etc/conda/deactivate.d/env_vars.sh"
+#echo "unset OUTPUT >> $CONDA_PREFIX/etc/conda/deactivate.d/env_vars.sh"
+#echo "unset REFERENCE >> $CONDA_PREFIX/etc/conda/deactivate.d/env_vars.sh"
+
+
+
+
+
+
+
 
 echo -e "====================\nSet-up is now complete\n$(adddate)\n====================\n"

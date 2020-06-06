@@ -2,8 +2,8 @@
 # Produce resistance report from VCF file
 
 
-first_line=(isoniazid rifampicin ethambutol pyrazinamide)
-second_line=(amikacin capreomycin ethionamide fluoroquinolones kanamycin linezolid para-aminosalicylic streptomycin)
+first_line=(Isoniazid Rifampicin Ethambutol Pyrazinamide)
+second_line=(Amikacin Capreomycin Ethionamide Fluoroquinolones Kanamycin Linezolid Para-aminosalicylic Streptomycin)
 
 # Assign barcode
 barcode=$(cat $ROOT/dataset/manifest.tsv | grep $SAMPLE | grep $run_stamp | cut -f 1)
@@ -15,7 +15,7 @@ do
   do
     snp=$(echo $line | awk '{print $1,$2,$3}' OFS='\t')
     gene=$(echo $line | awk 'BEGIN{FS=OFS=" "}{print $4,$5}')
-    pmid=$(echo $line | awk 'NF && NF-1 {print ($(NF-1))}')
+    pmid=$(echo $line | awk '{print $6}' OFS='\t')
     # If the mutation is found
     mutation=
     if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
@@ -39,7 +39,8 @@ do
   do
     snp=$(echo $line | awk '{print $1,$2,$3}' OFS='\t')
     gene=$(echo $line | awk 'BEGIN{FS=OFS=" "}{print $4,$5}')
-    pmid=$(echo $line | awk 'NF && NF-1 {print ($(NF-1))}')
+    pmid=$(echo $line | awk '{print $6}' OFS='\t')
+#    pmid=$(echo $line | awk 'NF && NF-1 {print ($(NF-1))}')
     # If the mutation is found
     mutation=
     if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
@@ -55,4 +56,39 @@ do
   then
     echo -e "${barcode}\tSecond Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNo\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
   fi
+done
+
+
+##### Create a second file that contains all mutations (including low confidence)
+
+for i in ${first_line[@]}
+do
+  while read line
+  do
+    snp=$(echo $line | awk '{print $1,$2,$3}' OFS='\t')
+    gene=$(echo $line | awk 'BEGIN{FS=OFS=" "}{print $4,$5}')
+    pmid=$(echo $line | awk '{print $6}' OFS='\t')
+    confidence=$(echo $line | awk '{print $7}' OFS='\t')
+    # If the mutation is found
+    if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
+    then
+      echo -e "${barcode}\tFirst Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}\t${confidence}" >> $ROOT/dataset/full_profile.tsv
+    fi
+  done < $ROOT/reference/mutations/${i}.txt
+done
+
+for i in ${second_line[@]}
+do
+  while read line
+  do
+    snp=$(echo $line | awk '{print $1,$2,$3}' OFS='\t')
+    gene=$(echo $line | awk 'BEGIN{FS=OFS=" "}{print $4,$5}')
+    pmid=$(echo $line | awk '{print $6}' OFS='\t')
+    confidence=$(echo $line | awk '{print $7}' OFS='\t')
+    # If the mutation is found
+    if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
+    then
+      echo -e "${barcode}\tFirst Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}\t${confidence}" >> $ROOT/dataset/full_profile.tsv
+    fi
+  done < $ROOT/reference/mutations/${i}.txt
 done

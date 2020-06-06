@@ -1,0 +1,5 @@
+name: resistance
+channels:
+  - javascript
+dependencies:
+  - python=3.6

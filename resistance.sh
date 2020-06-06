@@ -182,6 +182,8 @@ fi
 ROOT=$(dirname $(realpath $0))
 export ROOT=$ROOT
 
+#conda activate resistance
+
 BED=$ROOT/reference/genome.bed
 export BED=$BED
 
@@ -251,17 +253,29 @@ export STAMP=${ROOT}/tmp/${run_stamp}
 
 # MASK CHECK
 
+if [[ ( -n $GENOME ) && ( -z $MASK ) ]]
+then
+	pipelineGenome="User provided genome"
+	pipelineMasking="NO"
+fi
+
 if [[ -n $MASK ]]
 then
 	if [[ -z $GENOME ]]
 	then
+		pipelineGenome="H37Rv"
+		pipelineMasking="YES"
 		maskfasta -fi $ROOT/reference/H37Rv.fa -bed $BED -fo $ROOT/reference/masked_H37Rv.fa && GENOME=$ROOT/reference/masked_H37Rv.fa
 	else
 		maskfasta -fi $GENOME -bed $BED -f $ROOT/reference/masked_user_genome.fa && GENOME=$ROOT/reference/masked_user_genome.fa
+		pipelineGenome="User provided genome"
+		pipelineMasking="YES"
 	fi
 elif [[ ( -z $MASK ) && ( -z $GENOME ) ]]
 	then
 		GENOME=$ROOT/reference/H37Rv.fa
+		pipelineGenome="H37Rv"
+		pipelineMasking="NO"
 fi
 
 export GENOME=$GENOME
@@ -315,7 +329,7 @@ then
 		addup=$((barcode++))
 	fi
 
-	echo -e "${barcode}\t${base_forward}\t${base_reverse}\t${sample_ID}\t$(adddate)" >> $ROOT/dataset/manifest.tsv
+	echo -e "${barcode}\t${base_forward}\t${base_reverse}\t${sample_ID}\t$(adddate)\tResistance V0.01a\t${pipelineGenome}\t${pipelineMasking}" >> $ROOT/dataset/manifest.tsv
 
 elif [[ ! $FASTA == TRUE ]]
 then
@@ -330,7 +344,7 @@ then
 	for i in ${man_array[@]}
 	do
 		name=$(echo $i | sed 's/.R1.*fastq.gz//')
-		echo -e "$barcode\t$i\t${i//R1/R2}\t$name\t$(adddate)" >> $ROOT/dataset/manifest.tsv
+		echo -e "$barcode\t$i\t${i//R1/R2}\t$name\t$(adddate)\tResistance V0.01a\t${pipelineGenome}\t${pipelineMasking}" >> $ROOT/dataset/manifest.tsv
 		addup=$((barcode++))
 	done
 fi
@@ -392,7 +406,7 @@ do
 	export SAMPLE=$i
 	export run_stamp=$run_stamp
 	bash ./.scr/profile.sh
-done
+done 
 
 echo "The Pipeline has now finished"
 
