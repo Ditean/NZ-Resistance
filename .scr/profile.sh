@@ -88,7 +88,7 @@ do
     # If the mutation is found
     if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
     then
-      echo -e "${barcode}\tFirst Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}\t${confidence}" >> $ROOT/dataset/full_profile.tsv
+      echo -e "${barcode}\tSecond Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}\t${confidence}" >> $ROOT/dataset/full_profile.tsv
     fi
   done < $ROOT/reference/mutations/${i}.txt
 done

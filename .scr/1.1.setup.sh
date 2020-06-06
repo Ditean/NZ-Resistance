@@ -309,11 +309,19 @@ else
   awk 'NR==1,/resistance_profile.tsv/{sub(/CHECK/,"ALREADY_PRESENT")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 fi
 
+######### NEED TO FIX THIS LATER ( ADD IN SEARCH FOR THE EXISTANCE OF THE FULL PROFILE )
+if [ ! -f $ROOT/dataset/full_profile.tsv]
+then
+  touch $ROOT/dataset/full_profile.tsv
+  echo -e "BARCODE\tCLASS\tDRUG\tSTATUS\tGENE\tPOSITION\tREFERENCE\tALTERNATE\tPMID\tCONFIDENCE"
+
+
+
 # Manifest File
 if [ ! -f $ROOT/dataset/manifest.tsv ]
 then
   touch $ROOT/dataset/manifest.tsv
-  echo -e "BARCODE\tFORWARD SEQ\tREVERSE SEQ\tSAMPLE ID\tPROCESSING DATE" > $ROOT/dataset/manifest.tsv
+  echo -e "BARCODE\tFORWARD\tREVERSE\tSAMPLE ID\tPROCESSING DATE\tPIPELINE\tGENOME\tMASKING" > $ROOT/dataset/manifest.tsv
   awk 'NR==1,/manifest.tsv/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
   echo "Manifest detected"
