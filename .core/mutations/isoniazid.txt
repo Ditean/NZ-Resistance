@@ -1,10 +1,10 @@
-1673425	C	T	fabG1	---	isoniazid	(INH)	21300839	High
-1673432	T	A	fabG1	---	isoniazid	(INH)	19494067	High
-1673432	T	C	fabG1	---	isoniazid	(INH)	21300839	High
-1674481	T	G	inhA	Ser94Ala	isoniazid	(INH)	ethionamide	(ETH)	24055765	High
-2155168	C	G	katG	Ser315Thr	isoniazid	(INH)	8878604	High
-2155168	C	T	katG	Ser315Asn	isoniazid	(INH)	9210694	High
-2155168	C	A	katG	Ser315Ile	isoniazid	(INH)	9210694	High
-2155169	T	C	katG	Ser315Gly	isoniazid	(INH)	8878604	High
-2155214	A	C	katG	Trp300Gly	isoniazid	(INH)	24055765	High
-2155289	T	G	katG	Thr275Pro	isoniazid	(INH)	24055765	High
+1673425 C T fabG1 --- 26104204 yes Isoniazid (INH)
+1673432 T A fabG1 --- 19494067 yes Isoniazid (INH)
+1673432 T C fabG1 --- 21300839 yes Isoniazid (INH)
+1674481 T G inhA Ser94Ala 24055765 yes Isoniazid (INH)
+2155168 G C katG Ser315Thr 8878604 yes Isoniazid (INH)
+2155168 G A katG Ser315Asn 9210694 yes Isoniazid (INH)
+2155168 G T katG Ser315Ile 9210694 yes Isoniazid (INH)
+2155169 A G katG Ser315Gly 8878604 yes Isoniazid (INH)
+2155214 T G katG Trp300Gly 24055765 yes Isoniazid (INH)
+2155289 A C katG Thr275Pro 24055765 yes Isoniazid (INH)

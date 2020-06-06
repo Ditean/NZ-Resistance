@@ -54,7 +54,7 @@ do
   # If no mutation is found
   if [[ ! $mutation == "FOUND" ]]
   then
-    echo -e "${barcode}\tSecond Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNo\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
+    echo -e "${barcode}\tSecond Line\t${i}\tSensitive\tNo resistance predicted\tNO\tNO\tNO\tNO" >> $ROOT/dataset/resistance_profile.tsv
   fi
 done
 
@@ -69,12 +69,16 @@ do
     gene=$(echo $line | awk 'BEGIN{FS=OFS=" "}{print $4,$5}')
     pmid=$(echo $line | awk '{print $6}' OFS='\t')
     confidence=$(echo $line | awk '{print $7}' OFS='\t')
+    drug=(echo $line | awk '{print $8}' OFS='\t')
     # If the mutation is found
-    if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
+    if [[ $i == $drug ]]
     then
-      echo -e "${barcode}\tFirst Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}\t${confidence}" >> $ROOT/dataset/full_profile.tsv
+      if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
+      then
+        echo -e "${barcode}\tFirst Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}\t${confidence}" >> $ROOT/dataset/genomic_profile.tsv
+      fi
     fi
-  done < $ROOT/reference/mutations/${i}.txt
+  done < $ROOT/reference/mutations/Mtb_snp_db.txt
 done
 
 for i in ${second_line[@]}
@@ -85,10 +89,14 @@ do
     gene=$(echo $line | awk 'BEGIN{FS=OFS=" "}{print $4,$5}')
     pmid=$(echo $line | awk '{print $6}' OFS='\t')
     confidence=$(echo $line | awk '{print $7}' OFS='\t')
+    drug=(echo $line | awk '{print $8}' OFS='\t')
     # If the mutation is found
-    if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
+    if [[ $i == $drug ]]
     then
-      echo -e "${barcode}\tSecond Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}\t${confidence}" >> $ROOT/dataset/full_profile.tsv
+      if grep -q $snp "$ROOT/output/${SAMPLE}.vcf" # NEED TO LOOP TO CORRECT FILE
+      then
+        echo -e "${barcode}\tSecond Line\t${i}\tResistance\t${gene}\t${snp}\t${pmid}\t${confidence}" >> $ROOT/dataset/genomic_profile.tsv
+      fi
     fi
-  done < $ROOT/reference/mutations/${i}.txt
+  done < $ROOT/reference/mutations/Mtb_snp_db.txt
 done

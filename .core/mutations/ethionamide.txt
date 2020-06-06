@@ -1,0 +1,2 @@
+1673425 C T fabG1 --- 26104204 yes Ethionamide (ETH)
+1674481 T G inhA Ser94Ala 24055765 yes Ethionamide (ETH)

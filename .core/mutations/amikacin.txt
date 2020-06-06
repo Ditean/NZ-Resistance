@@ -1,3 +1,3 @@
-1473246	A	G	rrs	---	amikacin	(AMK)	kanamycin	(KAN)	capreomycin	(CPR)	21300839	High
-1473247	C	T	rrs	---	amikacin	(AMK)	kanamycin	(KAN)	capreomycin	(CPR)	16048924	High
-1473329	G	T	rrs	---	amikacin	(AMK)	kanamycin	(KAN)	capreomycin	(CPR)	21562102	High
+1473246 A G rrs --- 21300839 yes Amikacin (AMK)
+1473247 C T rrs --- 16048924 yes Amikacin (AMK)
+1473329 G T rrs --- 21562102 yes Amikacin (AMK)

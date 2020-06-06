@@ -1,2 +1,2 @@
-781687	A	G	rpsL	Lys43Arg	streptomycin	(SM)	22646308	High
-781822	A	G	rpsL	Lys88Arg	streptomycin	(SM)	22646308	High
+781687 A G rpsL Lys43Arg 22646308 yes Streptomycin (SM)
+781822 A G rpsL Lys88Arg 22646308 yes Streptomycin (SM)

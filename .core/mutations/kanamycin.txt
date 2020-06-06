@@ -1,1 +1,3 @@
-2715346	G	A	eis	---	kanamycin	(KAN)	amikacin	(AMK)	21300839	High
+1473246 A G rrs --- 21300839 yes Kanamycin (KAN)
+1473247 C T rrs --- 16048924 yes Kanamycin (KAN)
+1473329 G T rrs --- 21562102 yes Kanamycin (KAN)
