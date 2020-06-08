@@ -173,8 +173,26 @@ if [[ $HELP == YES ]]
 then
 	echo -e "TB Resistance Profiler"
 	echo -e "======================\n"
-	echo -e "Usage: resistance.sh [ -r1 forward ] [ -r2 reverse ] [ -g genome ] [ -a adaptor ] [ -q quality ]\n"
-	echo -e "  -r1"
+	echo -e "Usage: resistance.sh [ -r1 forward ] [ -r2 reverse ] [ -g genome ] [ -a adaptor ] [ -q quality ]\n\n"
+	echo -e "All flags are optional. RESISTANCE will detect files within the input DIR and use pre-defined"
+	echo -e "parameters and reference files if no options are used.\n\n"
+	echo -e "Basic options:"
+	echo -e "		-h  --help				Print help message"
+	echo -e "				--setup				Create all the necessary file structures and references for running RESISTANCE\n"
+	echo -e "Input data:"
+	echo -e "		-r1 --forward			PATH to forward PE sequencing file"
+	echo -e "		-r2 --reverse			PATH to reverse PE sequencing file"
+	echo -e "		-g	--genome			PATH to reference genome"
+	echo -e "		-a	--adaptor			PATH to sequencing adaptor file [FASTA FORMAT]"
+	echo -e "				--bed					PATH to BED file for masking reference genome\n"
+	echo -e "Advanced options:"
+	echo -e "		-t	--threads			Set number of cores available for use"
+	echo -e "											NOTE: Some processes have hardset upper limits set"
+	echo -e "		-q	--quality			Set Phred quality threshold for trimming"
+	echo -e "				--mask				Perform alignments on a masked reference genome"
+	echo -e "											NOTE: Reference genome will be masked as part of the process."
+	echo -e "											      To use an already masked genome, simply provide it as a"
+	echo -e "											      user provided genome using -g [ --genome ]"
 	exit 0
 fi
 
@@ -317,6 +335,8 @@ then
 	done
 fi
 
+
+
 # BARCODE
 if [[ $FASTA == TRUE ]]
 then
@@ -406,7 +426,8 @@ do
 	export SAMPLE=$i
 	export run_stamp=$run_stamp
 	bash ./.scr/profile.sh
-done 
+done
+ 
 
 echo "The Pipeline has now finished"
 

@@ -310,11 +310,11 @@ else
 fi
 
 ######### NEED TO FIX THIS LATER ( ADD IN SEARCH FOR THE EXISTANCE OF THE FULL PROFILE )
-if [ ! -f $ROOT/dataset/genomic_profile.tsv]
+if [ ! -f $ROOT/dataset/genomic_profile.tsv ]
 then
   touch $ROOT/dataset/genomic_profile.tsv
-  echo -e "BARCODE\tCLASS\tDRUG\tSTATUS\tGENE\tPOSITION\tREFERENCE\tALTERNATE\tPMID\tCONFIDENCE"
-
+  echo -e "BARCODE\tCLASS\tDRUG\tSTATUS\tGENE\tPOSITION\tREFERENCE\tALTERNATE\tPMID\tCONFIDENCE" >> $ROOT/dataset/genomic_profile.tsv
+fi
 
 
 # Manifest File

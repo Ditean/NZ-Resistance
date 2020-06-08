@@ -69,7 +69,7 @@ do
     gene=$(echo $line | awk 'BEGIN{FS=OFS=" "}{print $4,$5}')
     pmid=$(echo $line | awk '{print $6}' OFS='\t')
     confidence=$(echo $line | awk '{print $7}' OFS='\t')
-    drug=(echo $line | awk '{print $8}' OFS='\t')
+    drug=$(echo $line | awk '{print $8}' OFS='\t')
     # If the mutation is found
     if [[ $i == $drug ]]
     then
@@ -89,7 +89,7 @@ do
     gene=$(echo $line | awk 'BEGIN{FS=OFS=" "}{print $4,$5}')
     pmid=$(echo $line | awk '{print $6}' OFS='\t')
     confidence=$(echo $line | awk '{print $7}' OFS='\t')
-    drug=(echo $line | awk '{print $8}' OFS='\t')
+    drug=$(echo $line | awk '{print $8}' OFS='\t')
     # If the mutation is found
     if [[ $i == $drug ]]
     then
