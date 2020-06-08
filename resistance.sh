@@ -349,7 +349,7 @@ then
 		addup=$((barcode++))
 	fi
 
-	echo -e "${barcode}\t${base_forward}\t${base_reverse}\t${sample_ID}\t$(adddate)\tResistance V0.01a\t${pipelineGenome}\t${pipelineMasking}" >> $ROOT/dataset/manifest.tsv
+	echo -e "${barcode}\t${base_forward}\t${base_reverse}\t${sample_ID}\t$(adddate)\tResistance V0.01a\t${pipelineGenome}\t${pipelineMasking}\tVERSION\tPreTotal\tPreGC\tPostTotal\tPostGC" >> $ROOT/dataset/manifest.tsv
 
 elif [[ ! $FASTA == TRUE ]]
 then
@@ -364,7 +364,7 @@ then
 	for i in ${man_array[@]}
 	do
 		name=$(echo $i | sed 's/.R1.*fastq.gz//')
-		echo -e "$barcode\t$i\t${i//R1/R2}\t$name\t$(adddate)\tResistance V0.01a\t${pipelineGenome}\t${pipelineMasking}" >> $ROOT/dataset/manifest.tsv
+		echo -e "$barcode\t$i\t${i//R1/R2}\t$name\t$(adddate)\tResistance V0.01a\t${pipelineGenome}\t${pipelineMasking}\tVERSION\tPreTotal\tPreGC\tPostTotal\tPostGC" >> $ROOT/dataset/manifest.tsv
 		addup=$((barcode++))
 	done
 fi

@@ -321,7 +321,7 @@ fi
 if [ ! -f $ROOT/dataset/manifest.tsv ]
 then
   touch $ROOT/dataset/manifest.tsv
-  echo -e "BARCODE\tFORWARD\tREVERSE\tSAMPLE ID\tPROCESSING DATE\tPIPELINE\tGENOME\tMASKING" > $ROOT/dataset/manifest.tsv
+  echo -e "BARCODE\tFORWARD\tREVERSE\tSAMPLE ID\tPROCESSING DATE\tPIPELINE\tGENOME\tMASKING\FastQC\tPreTotal\tPreGC\tPostTotal\tPostGC" > $ROOT/dataset/manifest.tsv
   awk 'NR==1,/manifest.tsv/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
   echo "Manifest detected"
