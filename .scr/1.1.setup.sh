@@ -1,3 +1,5 @@
+# Updated 11/06/2020 - Jordan
+
 # PROJECT PROGRESS
 # ================
 #   - think about if you need .core files in report (maybe only reference)
@@ -321,7 +323,7 @@ fi
 if [ ! -f $ROOT/dataset/manifest.tsv ]
 then
   touch $ROOT/dataset/manifest.tsv
-  echo -e "BARCODE\tFORWARD\tREVERSE\tSAMPLE ID\tPROCESSING DATE\tPIPELINE\tGENOME\tMASKING\FastQC\tPreTotal\tPreGC\tPostTotal\tPostGC" > $ROOT/dataset/manifest.tsv
+  echo -e "BARCODE\tFORWARD\tREVERSE\tSAMPLE ID\tPROCESSING DATE\tPIPELINE\tGENOME\tMASKING\FastQC\tEncoding\tPreTotal\tPreGC\tPostTotal\tPostGC" > $ROOT/dataset/manifest.tsv
   awk 'NR==1,/manifest.tsv/{sub(/CHECK/,"YES")}1' log_setup.txt > temp.txt && mv temp.txt log_setup.txt
 else
   echo "Manifest detected"

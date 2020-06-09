@@ -1,0 +1,159 @@
+\documentclass{article}
+
+\usepackage[a4paper, top=3cm,left=0.5cm,right=0.5cm,bottom=2cm,headheight=22.5pt]{geometry}
+\usepackage{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{multirow}
+\usepackage{collcell}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{tabu}
+%\usepackage[table]{xcolor}
+\pagestyle{fancy}
+
+
+\fancyhead[L]{\textbf{LOGO}}
+\fancyhead[C]{\textbf{TUBERCULOSIS RESISTANCE REPORT} \\ \textit{Whole Genome Sequencing Report}}
+\fancyhead[R]{PATIENT NHI: XXXXX}
+
+\fancyfoot[L]{PATIENT NHI: XXXXX}
+\fancyfoot[R]{date}
+
+\fancypagestyle{ending}{
+  \fancyhead[L]{\textbf{LOGO}}
+  \fancyhead[C]{\textbf{TUBERCULOSIS RESISTANCE REPORT} \\ \textit{Whole Genome Sequencing Report}}
+  \fancyhead[R]{PATIENT NHI: XXXXX}
+
+  \fancyfoot[L]{Clinician:}
+  \fancyfoot[C]{Signature:}
+}
+
+
+\newtcolorbox{reportSection}[2][]{colbacktitle=black!1!white, colback=white!5!white, coltitle=black!70!black, boxrule=0.5pt, title=\textbf{\large{#2}}, fonttitle=\bfseries,#1}
+
+
+\newtcolorbox{reportBox}[2][]{colbacktitle=black!5!white, colback=white!5!white, coltitle=black!70!black, title=\textbf{\large{#2}}, fonttitle=\bfseries,#1}
+
+
+\newcolumntype{U}{>{\collectcell\MakeUpperCase}l<{\endcollectcell}}
+%\renewcommand{\arraystretch}{1.2}
+\renewcommand{\headrulewidth}{0pt}
+
+\usepackage{Sweave}
+\begin{document}
+
+\input{tutorial-concordance}
+
+\begin{reportSection}{A1: Summary Section}
+\begin{reportBox}{Patient Details}
+
+%\begin{tabular}{l l||l l}
+%Patient Name: & Example Name & Patient Gender & Male
+%\end{tabular}
+
+%\begin{tabu} to \textwidth {|XA||XA|}
+\noindent \begin{tabular}{|p{0.16\textwidth}p{0.3\textwidth}||p{0.16\textwidth}p{0.3\textwidth}|}
+\hline
+Patient Name: & JACOB REDFIELD & Barcode: & 10001 \\
+DOB: & 20/04/1975 & NHI: & FRX9012 \\
+Gender: & M & Ethnicity: & NZ EUROPEAN \\ \cline{1-4}
+\hline
+Location: & AUCKLAND & Sample Type: & SPUTUM \\
+Sample Date: & 07/09/2016 & Culture Method: & MGIT \\
+Reporting Lab: & LABPLUS & Technician: & DR ROD JACKSON \\
+Sequencing Date: & 19/05/2020 & Sequencing: & WGS \\
+\hline
+Requested by: & DR ALEX PETERS & Contact: & A.PETERS@AUCKLANDDHB.NZ \\ \cline{1-4}
+\end{tabular}
+\end{reportBox}
+
+\vspace{1cm}
+
+%\begin{reportBox}{Resistance Profile}
+%\noindent \begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|} \hline
+%\multicolumn{1}{|l|}{\textbf{Drug Class}} & \textbf{Resistance} & \textbf{Drug} & \textbf{Mutation} \\ \cline{1-4}
+
+%\multirow{4}{*}{First line} & \multirow{4}{*}{Resistance} & \textbf{}
+
+%\begin{reportBox}{Resistance Profile}
+%\noindent \begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|} \hline
+%\multicolumn{1}{|l|}{\textbf{Drug Class}} & \textbf{Resistance} & \textbf{Drug} & \textbf{Mutation} \\ \cline{1-4}
+\begin{reportBox}{Resistance Profile}
+\noindent \begin{tabular}{|p{0.1\textwidth}|p{0.09\textwidth}|p{0.22\textwidth}|p{0.08\textwidth}|} \hline
+\multicolumn{1}{|l|}{\textbf{Drug Class}} & \textbf{Resistance} & \textbf{Drug} & \textbf{Mutation} \\ \cline{1-4}
+
+\multirow{4}{*}{First line} & \cellcolor{lightgray} & \cellcolor{lightgray} Isoniazid & \cellcolor{lightgray} \textit{katG} \\
+& \cellcolor{lightgray} & \cellcolor{lightgray} Rifampicin & \cellcolor{lightgray} \textit{rpoB} \\
+& \cellcolor{lightgray} & \cellcolor{lightgray} Ethambutol & \cellcolor{lightgray} \textit{embB} \\
+& \multirow{-4}{*}{\cellcolor{lightgray}Resistance} & \cellcolor{lightgray} Pyrazinamide & \cellcolor{lightgray} \textit{pncA} \\ \cline{1-4}
+\hline \multirow{8}{*}{Second Line} & \multirow{6}{*}{Sensitive} & Amikacin & \\
+&& Capreomycin & \\
+&& Ethionamide & \\
+&& Kanamycin & \\
+&& Linezolid & \\
+&& Para-aminosalicylic Acid & \\ \cline{2-4}
+&\cellcolor{lightgray}& \cellcolor{lightgray}Fluoroquinolones & \cellcolor{lightgray}\textit{gyrB} \\
+& \multirow{-2}{*}{\cellcolor{lightgray}Resistance} & \cellcolor{lightgray}Streptomycin & \cellcolor{lightgray}\textit{rpsL} \\ \cline{1-4}
+\end{tabular}
+
+
+
+\end{reportBox}
+
+
+%\multirow{4}{*}{First Line} & \multirow{2}{*}{Sensitive} & RIF & \textit{Gene} \\
+%& & INH & \textit{Gene} \\ \cline{2-4}
+
+%& \cellcolor{lightgray} \multirow{2}{*}{Resistance} & \cellcolor{lightgray} ETH & \cellcolor{lightgray} \textit{Gene} \\
+%& & \cellcolor{lightgray} PLZ & \cellcolor{lightgray} \textit{Gene} \\ \cline{1-4}
+
+%& \cellcolor{lightgray} & \cellcolor{lightgray} ETH & \cellcolor{lightgray} \textit{Gene} \\
+%& \multirow{-2}{*}{\cellcolor{lightgray}Resistance}& \cellcolor{lightgray} PLZ & \cellcolor{lightgray} \textit{Gene} %\\ \cline{1-4}
+
+
+%\multirow{6}{*}{Second Line} & \multirow{2}{*}{Sensitive} & STE & \textit{Gene} \\
+%& & BDQ & \textit{Gene} \\ \cline{2-4}
+
+%& \cellcolor{lightgray} & ETH & \textit{Gene} \\
+%& \cellcolor{lightgray} & PLZ & \textit{Gene} \\
+%& \cellcolor{lightgray} & AMN & \textit{Gene} \\
+%& \multirow{-4}{*}{\cellcolor{lightgray}Resistance} & FLQ & \textit{Gene} \\ \cline{1-4}
+
+%\end{tabular}
+
+%\end{reportBox}
+
+\end{reportSection}
+
+\pagebreak
+
+\pagestyle{ending}
+
+\begin{reportSection}{A2: Technical Report}
+
+\begin{reportBox}{Technical Example}
+\end{reportBox}
+
+\end{reportSection}
+\pagebreak
+
+%\begin{tabular}{|p{3cm}|p{3cm}|p{3cm}|}
+\begin{tabular}{|p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}|}
+\hline
+Field 1 & Filed 2 & Filed 3
+\end{tabular}
+
+\end{document}
+
+
+
+%\rowcolor{gray!20} \multirow{2}{*}{Season} & \multicolumn{2}{c}{Lower %Limit} & \multicolumn{2}{c}{Upper Limit} \\ \cmidrule{2-5}
+%\rowcolor{gray!20} & Avg. & Max. & Avg. & Max. \\
+
+%\rowcolor{gray!20}  & \multicolumn{2}{c}{Lower Limit} & \multicolumn{2}{c}%{Upper Limit} \\ \cmidrule{2-5}
+%\rowcolor{gray!20} \multirow{-2}{*}{Season} & Avg. & Max. & Avg. & Max. \\
+
+
+
+
+

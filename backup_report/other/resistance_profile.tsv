@@ -1,0 +1,133 @@
+BARCODE	CLASS	DRUG	STATUS	GENE	POSITION	REFERENCE	ALTERNATE	PMID
+1000	First Line	isoniazid	Sensitive	No resistance predicted	NO	NO	NO	NO
+1000	First Line	rifampicin	Resistance	rpoB His445Asp	761139	C	G	21300839
+1000	First Line	ethambutol	Sensitive	No resistance predicted	NO	NO	NO	NO
+1000	First Line	pyrazinamide	Sensitive	No resistance predicted	NO	NO	NO	NO
+1000	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1000	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1000	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1000	Second Line	fluoroquinolones	Resistance	gyrB Asn499Asp	6734	A	G	17412727
+1000	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1000	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1000	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1000	Second Line	streptomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1001	First Line	isoniazid	Resistance	katG Ser315Thr	2155168	C	G	8878604
+1001	First Line	rifampicin	Resistance	rpoB Val170Phe	760314	G	T	11136757
+1001	First Line	ethambutol	Resistance	embB Gly406Ala	4247730	G	C	20427375
+1001	First Line	pyrazinamide	Resistance	pncA Leu19Pro	2289186	A	G	25336456
+1001	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1001	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1001	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1001	Second Line	fluoroquinolones	Resistance	gyrB Asn499Asp	6734	A	G	17412727
+1001	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1001	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1001	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1001	Second Line	streptomycin	Resistance	rpsL Lys43Arg	781687	A	G	22646308
+1002	First Line	isoniazid	Resistance	fabG1 ---	1673425	C	T	21300839
+1002	First Line	rifampicin	Resistance	rpoB Asp435Phe	761109	GA	TT	X
+1002	First Line	ethambutol	Sensitive	No resistance predicted	NO	NO	NO	NO
+1002	First Line	pyrazinamide	Sensitive	No resistance predicted	NO	NO	NO	NO
+1002	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1002	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1002	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1002	Second Line	fluoroquinolones	Resistance	gyrB Asn499Asp	6734	A	G	17412727
+1002	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1002	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1002	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1002	Second Line	streptomycin	Resistance	rpsL Lys43Arg	781687	A	G	22646308
+1003	First Line	isoniazid	Sensitive	No resistance predicted	NO	NO	NO	NO
+1003	First Line	rifampicin	Sensitive	No resistance predicted	NO	NO	NO	NO
+1003	First Line	ethambutol	Resistance	embB Gln497Arg	4248003	A	G	20427375
+1003	First Line	pyrazinamide	Sensitive	No resistance predicted	NO	NO	NO	NO
+1003	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1003	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1003	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1003	Second Line	fluoroquinolones	Resistance	gyrB Asn499Asp	6734	A	G	17412727
+1003	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1003	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1003	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1003	Second Line	streptomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1004	First Line	isoniazid	Resistance	fabG1 ---	1673425	C	T	21300839
+1004	First Line	rifampicin	Resistance	rpoB Ser450Trp	761155	C	G	7759399
+1004	First Line	ethambutol	Resistance	embB Gly406Ser	4247729	G	A	20427375
+1004	First Line	pyrazinamide	Sensitive	No resistance predicted	NO	NO	NO	NO
+1004	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1004	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1004	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1004	Second Line	fluoroquinolones	Resistance	gyrB Asp461Ala	6621	A	C	24055765
+1004	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1004	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1004	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1004	Second Line	streptomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1005	First Line	isoniazid	Sensitive	No resistance predicted	NO	NO	NO	NO
+1005	First Line	rifampicin	Resistance	rpoB Ser450Trp	761155	C	G	7759399
+1005	First Line	ethambutol	Sensitive	No resistance predicted	NO	NO	NO	NO
+1005	First Line	pyrazinamide	Sensitive	No resistance predicted	NO	NO	NO	NO
+1005	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1005	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1005	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1005	Second Line	fluoroquinolones	Resistance	gyrB Asp461Ala	6621	A	C	24055765
+1005	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1005	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1005	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1005	Second Line	streptomycin	Resistance	rpsL Lys43Arg	781687	A	G	22646308
+1006	First Line	isoniazid	Resistance	fabG1 ---	1673425	C	T	21300839
+1006	First Line	rifampicin	Resistance	rpoB Ser450Trp	761155	C	G	7759399
+1006	First Line	ethambutol	Sensitive	No resistance predicted	NO	NO	NO	NO
+1006	First Line	pyrazinamide	Sensitive	No resistance predicted	NO	NO	NO	NO
+1006	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1006	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1006	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1006	Second Line	fluoroquinolones	Resistance	gyrB Asn499Asp	6734	A	G	17412727
+1006	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1006	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1006	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1006	Second Line	streptomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1007	First Line	isoniazid	Sensitive	No resistance predicted	NO	NO	NO	NO
+1007	First Line	rifampicin	Resistance	rpoB Ser450Trp	761155	C	G	7759399
+1007	First Line	ethambutol	Resistance	embB Met306Ile	4247431	G	A	21300839
+1007	First Line	pyrazinamide	Resistance	pncA Gly97Ala	2288952	C	G	25336456
+1007	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1007	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1007	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1007	Second Line	fluoroquinolones	Resistance	gyrB Asp461His	6620	G	C	24055765
+1007	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1007	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1007	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1007	Second Line	streptomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1008	First Line	isoniazid	Resistance	fabG1 ---	1673425	C	T	21300839
+1008	First Line	rifampicin	Resistance	rpoB Ser450Trp	761155	C	G	7759399
+1008	First Line	ethambutol	Sensitive	No resistance predicted	NO	NO	NO	NO
+1008	First Line	pyrazinamide	Sensitive	No resistance predicted	NO	NO	NO	NO
+1008	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1008	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1008	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1008	Second Line	fluoroquinolones	Resistance	gyrB Asn499Asp	6734	A	G	17412727
+1008	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1008	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1008	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1008	Second Line	streptomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1009	First Line	isoniazid	Resistance	katG Ser315Thr	2155168	C	G	8878604
+1009	First Line	rifampicin	Resistance	rpoB Val170Phe	760314	G	T	11136757
+1009	First Line	ethambutol	Resistance	embB Gly406Ala	4247730	G	C	20427375
+1009	First Line	pyrazinamide	Resistance	pncA Leu19Pro	2289186	A	G	25336456
+1009	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1009	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1009	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1009	Second Line	fluoroquinolones	Resistance	gyrB Asn499Asp	6734	A	G	17412727
+1009	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1009	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1009	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1009	Second Line	streptomycin	Resistance	rpsL Lys43Arg	781687	A	G	22646308
+1010	First Line	isoniazid	Resistance	fabG1 ---	1673425	C	T	21300839
+1010	First Line	rifampicin	Resistance	rpoB Ser450Trp	761155	C	G	7759399
+1010	First Line	ethambutol	Resistance	embB Met306Ile	4247431	G	A	21300839
+1010	First Line	pyrazinamide	Sensitive	No resistance predicted	NO	NO	NO	NO
+1010	Second Line	amikacin	Sensitive	No resistance predicted	NO	No	NO	NO
+1010	Second Line	capreomycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1010	Second Line	ethionamide	Sensitive	No resistance predicted	NO	No	NO	NO
+1010	Second Line	fluoroquinolones	Resistance	gyrB Asn499Asp	6734	A	G	17412727
+1010	Second Line	kanamycin	Sensitive	No resistance predicted	NO	No	NO	NO
+1010	Second Line	linezolid	Sensitive	No resistance predicted	NO	No	NO	NO
+1010	Second Line	para-aminosalicylic	Sensitive	No resistance predicted	NO	No	NO	NO
+1010	Second Line	streptomycin	Sensitive	No resistance predicted	NO	No	NO	NO

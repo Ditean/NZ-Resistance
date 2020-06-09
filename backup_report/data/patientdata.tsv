@@ -1,0 +1,12 @@
+BARCODE	LName	FName	GENDER	ETHNICITY	DOB	NHI	Location	sType	sID	sDate	sSource	sSeq	reportLab	reportDate	comments	requestor	requestorContact
+1000	Jones	Douglas	M	MAORI	5/10/90	FSX1234	Auckland	sputum	AA111	1/10/15	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20		DR. EXAMPLE	email.address@dhb.govt.nz
+1001	Redfield	Jacob	M	NZ EUROPEAN	20/04/75	FRX9012	Auckland	sputum	AA112	7/09/16	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20	Previous TB Treatment 2009	DR. EXAMPLE	email.address@dhb.govt.nz
+1002	Regal	Gina	F	NZ EUROPEAN	1/02/00	NHX1212	Hamilton	sputum	AA113	9/11/16	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20		DR. EXAMPLE	email.address@dhb.govt.nz
+1003	Smith	Charles	M	NZ EUROPEAN	19/12/91	NHR1256	Wellington	sputum	AA114	3/03/17	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20	Poor quality DNA - require additional sample	DR. EXAMPLE	email.address@dhb.govt.nz
+1004	Hall	Karen	F	AUSTRALIAN	20/09/01	NHA5678	Christchurch	sputum	AA115	20/05/17	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20		DR. EXAMPLE	email.address@dhb.govt.nz
+1005	Jackson	Peter	M	NZ EUROPEAN	3/04/93	NPX9876	Dunedin	sputum	AA116	9/08/17	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20	Send copy of results to Student Health (University of Otago)	DR. EXAMPLE	email.address@dhb.govt.nz
+1006	Hamilton	Sophia	F	ENGLISH	31/12/93	ARR4578	Dunedin	sputum	AA117	9/08/17	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20	Send copy of results to Student Health (University of Otago)	DR. EXAMPLE	email.address@dhb.govt.nz
+1007	Devin	Samual	M	FRENCH	20/01/03	NZX6765	Auckland	sputum	AA118	11/02/19	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20		DR. EXAMPLE	email.address@dhb.govt.nz
+1008	Essen	Henry	M	GERMAN	15/05/85	NZA2323	Rotorua	sputum	AA119	17/06/19	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20		DR. EXAMPLE	email.address@dhb.govt.nz
+1009	Clark	Timothy	M	NZ EUROPEAN	17/08/82	HLA1034	Hamilton	sputum	AA120	21/12/19	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20		DR. EXAMPLE	email.address@dhb.govt.nz
+1010	Trench	Michael	M	AMERICAN	3/11/01	HLX8239	Wellington	sputum	AA121	5/01/20	pulmonary	MGIT Cultured Isolates	LabPLUS	19/05/20		DR. EXAMPLE	email.address@dhb.govt.nz
